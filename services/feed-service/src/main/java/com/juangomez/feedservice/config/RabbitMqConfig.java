@@ -65,7 +65,7 @@ public class RabbitMqConfig {
                 .build();
 
         Queue commentCreatedQueue = QueueBuilder
-                .durable(rabbitMqConstants.getQueuePostUnliked())
+                .durable(rabbitMqConstants.getQueueCommentCreated())
                 .withArgument(
                         "x-dead-letter-exchange",
                         rabbitMqConstants.getExchangePostEvents() + ".dlx"
