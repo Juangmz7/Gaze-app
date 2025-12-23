@@ -22,11 +22,8 @@ public class RabbitMqConstants {
     @Value("${rabbitmq.exchange.post.events}")
     private String exchangePostEvents;
 
-    @Value("${rabbitmq.exchange.user.commands}")
-    private String exchangeUserCommands;
-
-    @Value("${rabbitmq.exchange.user.events}")
-    private String exchangeUserEvents;
+    @Value("${rabbitmq.exchange.notification.events}")
+    private String exchangeNotificationEvents;
 
     // --- Routing Keys ---
     @Value("${rabbitmq.rk.tag.created}")
