@@ -2,7 +2,6 @@ package com.juangomez.userservice.messaging.sender;
 
 import com.juangomez.DomainMessage;
 import com.juangomez.events.user.InvalidUserEvent;
-import com.juangomez.events.user.UserLogedInEvent;
 import com.juangomez.events.user.UserRegisteredEvent;
 import com.juangomez.events.user.ValidUserEvent;
 import com.juangomez.userservice.util.RabbitMqConstants;
@@ -37,13 +36,6 @@ public class MessageSender {
         );
     }
 
-    public void sendUserLoggedInEvent (UserLogedInEvent event) {
-        publish(
-                rabbitMqConstants.getRkLoggedIn(),
-                rabbitMqConstants.getExchangeEvents(),
-                event
-        );
-    }
 
     public void sendInvalidUserEvent (InvalidUserEvent event) {
         publish(
