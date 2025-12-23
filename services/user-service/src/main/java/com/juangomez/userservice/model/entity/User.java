@@ -31,6 +31,7 @@ public class User {
     @Column(name = "password_hash")
     private String passwordHash;
 
+    @Column(name = "status")
     private UserAccountStatus status;
 
     @CreationTimestamp
@@ -78,6 +79,13 @@ public class User {
             throw new IllegalArgumentException("Username cannot be empty");
         }
         this.username = newUsername;
+    }
+
+    public void updateAccountStatus(UserAccountStatus status) {
+        if (status == null) {
+            throw new IllegalArgumentException("Status cannot be null");
+        }
+        this.status = status;
     }
 
     // --- Helper Methods ---
