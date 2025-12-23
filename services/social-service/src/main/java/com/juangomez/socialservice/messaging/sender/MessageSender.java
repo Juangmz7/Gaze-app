@@ -2,8 +2,6 @@ package com.juangomez.socialservice.messaging.sender;
 
 import com.juangomez.DomainMessage;
 import com.juangomez.commands.user.ValidateSingleUserCommand;
-import com.juangomez.commands.user.ValidateUserBatchCommand;
-import com.juangomez.events.post.*;
 import com.juangomez.events.social.FriendshipAcceptedEvent;
 import com.juangomez.events.social.FriendshipCancelledEvent;
 import com.juangomez.events.social.FriendshipDeclinedEvent;
