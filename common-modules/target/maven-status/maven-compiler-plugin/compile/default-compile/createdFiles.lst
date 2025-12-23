@@ -1,0 +1,17 @@
+com\juangomez\events\post\PostCommentSentEvent.class
+com\juangomez\events\social\FriendshipDeclinedEvent.class
+com\juangomez\events\notification\UserNotifiedEvent.class
+com\juangomez\events\post\PostLikedEvent.class
+com\juangomez\events\social\FriendshipCancelledEvent.class
+com\juangomez\events\post\PostCancelledEvent.class
+com\juangomez\events\social\FriendshipAcceptedEvent.class
+com\juangomez\events\post\PostCommentDeletedEvent.class
+com\juangomez\events\social\PendingFriendshipCreatedEvent.class
+com\juangomez\events\user\InvalidUserEvent.class
+com\juangomez\events\post\PostCreatedEvent.class
+com\juangomez\events\user\ValidUserEvent.class
+com\juangomez\events\post\PostUnlikedEvent.class
+com\juangomez\commands\user\ValidateUserBatchCommand.class
+com\juangomez\DomainMessage.class
+com\juangomez\commands\user\ValidateSingleUserCommand.class
+com\juangomez\events\user\UserRegisteredEvent.class

@@ -8,4 +8,8 @@ import java.util.UUID;
 public record PendingFriendshipCreatedEvent (
         UUID messageId,
         Instant occurredAt
-) implements DomainMessage {}
+) implements DomainMessage {
+    public PendingFriendshipCreatedEvent() {
+        this(UUID.randomUUID(), Instant.now());
+    }
+}

@@ -8,4 +8,8 @@ import java.util.UUID;
 public record PostCancelledEvent (
         UUID messageId,
         Instant occurredAt
-) implements DomainMessage {}
+) implements DomainMessage {
+    public PostCancelledEvent() {
+        this(UUID.randomUUID(), Instant.now());
+    }
+}

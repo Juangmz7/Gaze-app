@@ -8,4 +8,8 @@ import java.util.UUID;
 public record PostCommentDeletedEvent (
         UUID messageId,
         Instant occurredAt
-) implements DomainMessage {}
+) implements DomainMessage {
+    public PostCommentDeletedEvent() {
+        this(UUID.randomUUID(), Instant.now());
+    }
+}

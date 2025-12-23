@@ -9,4 +9,8 @@ import java.util.UUID;
 public record FriendshipDeclinedEvent (
         UUID messageId,
         Instant occurredAt
-) implements DomainMessage {}
+) implements DomainMessage {
+    public FriendshipDeclinedEvent() {
+        this(UUID.randomUUID(), Instant.now());
+    }
+}

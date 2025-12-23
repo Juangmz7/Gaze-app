@@ -8,4 +8,8 @@ import java.util.UUID;
 public record PostUnlikedEvent (
         UUID messageId,
         Instant occurredAt
-) implements DomainMessage {}
+) implements DomainMessage {
+    public PostUnlikedEvent() {
+        this(UUID.randomUUID(), Instant.now());
+    }
+}

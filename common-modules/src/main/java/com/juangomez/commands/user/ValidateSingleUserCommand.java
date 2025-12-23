@@ -7,5 +7,10 @@ import java.util.UUID;
 
 public record ValidateSingleUserCommand(
         UUID messageId,
+        UUID userId,
         Instant occurredAt
-) implements DomainMessage {}
+) implements DomainMessage {
+    public ValidateSingleUserCommand(UUID userId) {
+        this(UUID.randomUUID(), userId, Instant.now());
+    }
+}

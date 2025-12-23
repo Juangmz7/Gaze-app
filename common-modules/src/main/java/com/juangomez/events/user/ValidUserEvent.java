@@ -8,4 +8,8 @@ import java.util.UUID;
 public record ValidUserEvent (
         UUID messageId,
         Instant occurredAt
-) implements DomainMessage {}
+) implements DomainMessage {
+    public ValidUserEvent() {
+        this(UUID.randomUUID(), Instant.now());
+    }
+}
