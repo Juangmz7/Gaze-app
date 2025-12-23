@@ -32,4 +32,29 @@ public class Notification {
     @Column(updatable = false)
     private Instant createdAt;
 
+    @Builder
+    public Notification (
+            UUID recipientId,
+            String message,
+            UUID referenceId,
+            NotificationReason reason
+    ) {
+        if (recipientId ==  null) {
+
+        }
+        if (referenceId == null) {
+
+        }
+        if (message ==  null || message.trim().isEmpty())   {
+
+        }
+        if (reason  == null)  {
+
+        }
+        this.recipientId = recipientId;
+        this.referenceId = referenceId;
+        this.message = message;
+        this.reason = reason;
+    }
+
 }
