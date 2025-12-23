@@ -1,0 +1,172 @@
+openapi: 3.0.3
+info:
+  title: User Service v1
+  description: API for User Management
+  termsOfService: http://swagger.io/terms/
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+tags:
+  - name: User
+    description: Entity which consumes the application
+servers:
+  - url: /api/v1/user
+paths:
+  /register:
+    post:
+      tags:
+        - User
+      description: Register a new user account
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterUserResponse'
+        '400':
+          description: Invalid input data (e.g. bad email format)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Conflict - Username or Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /login:
+    post:
+      tags:
+        - User
+      description: User authentication
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        '401':
+          description: Unauthorized - Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+components:
+  schemas:
+    # --- REQUESTS ---
+    RegisterUserRequest:
+      type: object
+      required:
+        - username
+        - password
+        - email
+      properties:
+        username:
+          type: string
+          minLength: 3
+          example: 'Juan'
+        password:
+          type: string
+          minLength: 8
+          example: 'password123'
+        email:
+          type: string
+          format: email
+          example: 'email@example.com'
+
+    LoginUserRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: 'pedro'
+        password:
+          type: string
+          example: 'password123'
+
+    # --- RESPONSES ---
+    RegisterUserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        username:
+          type: string
+          example: "Juan"
+        email:
+          type: string
+          format: email
+          example: "email@example.com"
+
+    LoginUserResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: "JWT Token to be used in subsequent requests"
+          example: "eyJhbGciOiJIUzI....."
+
+    # --- ERRORS ---
+    ApiErrorResponse:
+      type: object
+      description: Standard error response structure
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: "Exact time when the error occurred"
+          example: "2025-12-23T21:36:55Z"
+        status:
+          type: integer
+          format: int32
+          description: "HTTP status code"
+          example: 404
+        error:
+          type: string
+          description: "Short description of the error"
+          example: "Not Found"
+        message:
+          type: string
+          description: "Detailed error message"
+          example: "The user with ID 123 was not found"
+        path:
+          type: string
+          description: "The URI path where the error occurred"
+          example: "/api/v1/users/123"
