@@ -23,7 +23,6 @@ public class Post {
     private UUID userId;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    @Setter
     private String content;
 
     @Column(name = "likes_count")
@@ -40,7 +39,6 @@ public class Post {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @Setter
     private PostStatus status;
 
     @Builder
@@ -78,5 +76,19 @@ public class Post {
         if (this.commentsCount > 0) {
             this.commentsCount--;
         }
+    }
+
+    public void updateStatus (PostStatus status) {
+        if (status == null) {
+
+        }
+        this.status = status;
+    }
+
+    public void setBody (String content) {
+        if (content == null || content.trim().length() < 3) {
+
+        }
+        this.content = content;
     }
 }
