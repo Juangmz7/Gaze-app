@@ -12,10 +12,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "posts")
 @Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Post {
 
     @Id
@@ -26,15 +23,14 @@ public class Post {
     private UUID userId;
 
     @Column(columnDefinition = "TEXT", nullable = false)
+    @Setter
     private String content;
 
-    @Builder.Default
     @Column(name = "likes_count")
-    private int likesCount = 0;
+    private int likesCount;
 
-    @Builder.Default
     @Column(name = "comments_count")
-    private int commentsCount = 0;
+    private int commentsCount;
 
     @CreationTimestamp // Auto set
     @Column(name = "created_at", updatable = false) // Cannot be updated
@@ -44,7 +40,25 @@ public class Post {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
+    @Setter
     private PostStatus status;
+
+    @Builder
+    public Post (UUID userId, String content) {
+        if (userId == null) {
+
+        }
+        if (content == null || content.trim().isEmpty()) {
+
+        }
+        this.content = content;
+        this.userId = userId;
+        this.commentsCount = 0;
+        this.likesCount = 0;
+        this.status = PostStatus.PENDING; // Default
+    }
+
+    // Domain methods -----
 
     public void incrementLikes() {
         this.likesCount++;
