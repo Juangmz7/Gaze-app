@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMqConfig {
 
     @Bean
-    public Declarables appointmentSchema(RabbitMqConstants rabbitMqConstants) {
+    public Declarables socialSchema(RabbitMqConstants rabbitMqConstants) {
         Queue invalidUserQueue = QueueBuilder
                 .durable(rabbitMqConstants.getQueueUserInvalid())
                 .withArgument(
