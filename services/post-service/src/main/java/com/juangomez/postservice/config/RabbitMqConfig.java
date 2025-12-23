@@ -8,8 +8,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMqConfig {
 
+    final private RabbitMqConstants rabbitMqConstants;
+
+    public RabbitMqConfig(RabbitMqConstants rabbitMqConstants) {
+        this.rabbitMqConstants = rabbitMqConstants;
+    }
+
     @Bean
-    public Declarables appointmentSchema(RabbitMqConstants rabbitMqConstants) {
+    public Declarables postSchema() {
         Queue invalidUserQueue = QueueBuilder
                 .durable(rabbitMqConstants.getQueueUserInvalid())
                 .withArgument(
