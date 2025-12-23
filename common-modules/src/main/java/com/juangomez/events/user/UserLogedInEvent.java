@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 
-public record UseLogedInEvent (
+public record UserLogedInEvent(
         UUID messageId,
         Instant occurredAt
 ) implements DomainMessage {}
