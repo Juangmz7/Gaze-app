@@ -127,6 +127,21 @@ public class RabbitMqConfig {
         );
 
         return new Declarables(
+                // Exchanges
+                postEventsExchange,
+                friendshipEventsExchange,
+
+                // Queues
+                commentCreatedQueue,
+                commentDeletedQueue,
+                friendshipAcceptedQueue,
+                friendshipCancelledQueue,
+                postCancelledQueue,
+                postCreatedQueue,
+                postLikedQueue,
+                postUnlikedQueue,
+
+                // Bindings
                 // Post
                 BindingBuilder
                         .bind(postCreatedQueue).

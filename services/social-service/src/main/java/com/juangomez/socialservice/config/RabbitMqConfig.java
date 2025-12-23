@@ -33,6 +33,8 @@ public class RabbitMqConfig {
         );
 
         return new Declarables(
+                userEventsExchange,
+                invalidUserQueue,
                 BindingBuilder
                         .bind(invalidUserQueue).
                         to(userEventsExchange)

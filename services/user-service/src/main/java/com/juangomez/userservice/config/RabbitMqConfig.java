@@ -45,6 +45,9 @@ public class RabbitMqConfig {
         );
 
         return new Declarables(
+                userCommandsExchange,
+                validateUserQueue,
+                validateUserBatchQueue,
                 BindingBuilder
                         .bind(validateUserBatchQueue).
                         to(userCommandsExchange)

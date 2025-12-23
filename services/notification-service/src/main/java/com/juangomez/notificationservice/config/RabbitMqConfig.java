@@ -63,6 +63,10 @@ public class RabbitMqConfig {
         );
 
         return new Declarables(
+                postEventsExchange,
+                commentCreatedQueue,
+                postLikedQueue,
+                tagCreatedQueue,
                 BindingBuilder
                         .bind(tagCreatedQueue).
                         to(postEventsExchange)
