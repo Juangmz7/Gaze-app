@@ -7,11 +7,12 @@
         <groupId>com.juangomez</groupId>
         <artifactId>platform-root</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>social-service</artifactId>
-    <name>social-service</name>
-    <description>social-service</description>
+    <artifactId>post-service</artifactId>
+    <name>post-service</name>
+    <description>post-service</description>
 
     <properties>
         <java.version>21</java.version>
