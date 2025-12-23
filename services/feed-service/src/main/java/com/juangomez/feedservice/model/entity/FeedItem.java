@@ -1,4 +1,4 @@
-package com.juangomez.feedservice.model;
+package com.juangomez.feedservice.model.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
