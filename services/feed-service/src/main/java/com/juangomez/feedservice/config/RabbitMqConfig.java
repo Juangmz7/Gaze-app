@@ -123,7 +123,7 @@ public class RabbitMqConfig {
         );
 
         var friendshipEventsExchange = new TopicExchange(
-                rabbitMqConstants.getExchangePostEvents()
+                rabbitMqConstants.getExchangeFriendshipEvents()
         );
 
         return new Declarables(
