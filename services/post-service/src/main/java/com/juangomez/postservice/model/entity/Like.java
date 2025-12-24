@@ -1,5 +1,6 @@
 package com.juangomez.postservice.model.entity;
 
+import com.juangomez.postservice.model.enums.LikeStatus;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +14,6 @@ import java.util.UUID;
 @Table(
         name = "post_likes",
         uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "user_id"})
-        // Constraint to avoid the same user to like a post more than once
 )
 @Getter
 @NoArgsConstructor
@@ -34,6 +34,9 @@ public class Like {
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 
+    @Enumerated(EnumType.STRING)
+    private LikeStatus status;
+
     @Builder
     public Like(Post post, UUID userId) {
         if (post == null) throw new IllegalArgumentException("Post cannot be null");
@@ -41,5 +44,19 @@ public class Like {
 
         this.post = post;
         this.userId = userId;
+        this.status = LikeStatus.ACTIVE;
+    }
+
+    // Domain Methods
+
+    public void updateStatus(LikeStatus status) {
+        if (status == null) {
+            throw new IllegalArgumentException("Status cannot be null");
+        }
+        this.status = status;
+    }
+
+    public void delete() {
+        this.updateStatus(LikeStatus.INACTIVE);
     }
 }

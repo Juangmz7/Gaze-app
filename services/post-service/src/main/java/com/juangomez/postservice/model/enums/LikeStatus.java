@@ -1,8 +1,7 @@
 package com.juangomez.postservice.model.enums;
 
-public enum PostStatus {
-    POSTED,
+public enum LikeStatus {
+    ACTIVE,
     PENDING,
-    CANCELLED,
     INACTIVE
 }

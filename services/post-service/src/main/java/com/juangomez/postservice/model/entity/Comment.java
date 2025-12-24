@@ -1,5 +1,6 @@
 package com.juangomez.postservice.model.entity;
 
+import com.juangomez.postservice.model.enums.CommentStatus;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,17 +21,18 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    // Internal relation
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "post_id")
     private Post post;
 
-    // External relation
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    private CommentStatus status;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -49,13 +51,26 @@ public class Comment {
         this.post = post;
         this.userId = userId;
         this.content = content;
+        this.status = CommentStatus.ACTIVE;
     }
 
-    // Domain Method
+    // Domain Methods
+
     public void updateContent(String newContent) {
         if (newContent == null || newContent.isBlank()) {
             throw new IllegalArgumentException("Comment content cannot be empty");
         }
         this.content = newContent;
+    }
+
+    public void updateStatus(CommentStatus status) {
+        if (status == null) {
+            throw new IllegalArgumentException("Status cannot be null");
+        }
+        this.status = status;
+    }
+
+    public void delete() {
+        this.updateStatus(CommentStatus.INACTIVE);
     }
 }
