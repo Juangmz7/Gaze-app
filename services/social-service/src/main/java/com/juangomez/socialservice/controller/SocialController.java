@@ -44,8 +44,8 @@ public class SocialController implements SocialApi {
 
     @Override
     public ResponseEntity<Void> declineFriendRequest(@Valid FriendRequestAction request) {
-        // Note: Connecting generated 'decline' with service 'declyne'
-        socialService.declyneFriendRequest(request);
+        // Note: Connecting generated 'decline' with service 'decline'
+        socialService.declineFriendRequest(request);
         return ResponseEntity.noContent().build();
     }
 }

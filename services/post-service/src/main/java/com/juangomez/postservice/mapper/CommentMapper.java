@@ -5,13 +5,24 @@ import com.juangomez.events.post.PostCommentSentEvent;
 import com.juangomez.postservice.model.dto.CommentPostResponse;
 import com.juangomez.postservice.model.entity.Comment;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+import java.time.Instant;
+import java.util.UUID;
+
+@Mapper(componentModel = "spring", imports = {UUID.class, Instant.class})
 public interface CommentMapper {
 
-    CommentPostResponse toResponse (Comment comment);
+    @Mapping(source = "post.id", target = "postId")
+    CommentPostResponse toResponse(Comment comment);
 
-    PostCommentSentEvent toCreatedEvent (Comment comment);
+    @Mapping(source = "post.id", target = "postId")
+    @Mapping(target = "messageId", expression = "java(UUID.randomUUID())")
+    @Mapping(source = "createdAt", target = "occurredAt")
+    PostCommentSentEvent toCreatedEvent(Comment comment);
 
-    PostCommentDeletedEvent toDeletedEvent (Comment comment);
+    @Mapping(source = "post.id", target = "postId")
+    @Mapping(target = "messageId", expression = "java(UUID.randomUUID())")
+    @Mapping(target = "occurredAt", expression = "java(Instant.now())")
+    PostCommentDeletedEvent toDeletedEvent(Comment comment);
 }

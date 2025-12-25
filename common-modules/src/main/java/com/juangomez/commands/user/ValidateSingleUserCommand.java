@@ -8,10 +8,10 @@ import java.util.UUID;
 public record ValidateSingleUserCommand(
         UUID messageId,
         UUID actionId,
-        UUID userId,
+        String username,
         Instant occurredAt
 ) implements DomainMessage {
-    public ValidateSingleUserCommand(UUID actionId, UUID userId) {
-        this(UUID.randomUUID(), actionId, userId, Instant.now());
+    public ValidateSingleUserCommand(UUID actionId, String username) {
+        this(UUID.randomUUID(), actionId, username, Instant.now());
     }
 }

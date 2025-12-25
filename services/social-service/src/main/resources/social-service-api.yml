@@ -166,7 +166,7 @@ components:
           example: "550e8400-e29b-41d4-a716-446655440000"
         status:
           type: string
-          enum: [PENDING, ACCEPTED, REJECTED]
+          enum: [PENDING, ACCEPTED, DECLINED, CANCELLED]
           example: "PENDING"
         createdAt:
           type: string

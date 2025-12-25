@@ -172,8 +172,6 @@ components:
         comments:
           type: integer
           format: int64
-        latestComment:
-          type: string
 
     # --- ERRORS ---
     ApiErrorResponse:

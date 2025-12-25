@@ -4,6 +4,10 @@ package com.juangomez.socialservice.service.impl;
 import com.juangomez.commands.user.ValidateSingleUserCommand;
 import com.juangomez.events.user.InvalidUserEvent;
 import com.juangomez.socialservice.mapper.SocialMapper;
+import com.juangomez.socialservice.model.dto.FriendRequestAction;
+import com.juangomez.socialservice.model.dto.FriendRequestDetails;
+import com.juangomez.socialservice.model.dto.FriendRequestResponse;
+import com.juangomez.socialservice.model.dto.SendFriendRequest;
 import com.juangomez.socialservice.model.entity.Friendship;
 import com.juangomez.socialservice.model.enums.FrienshipStatus;
 import com.juangomez.socialservice.messaging.sender.MessageSender;
@@ -19,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -62,8 +67,9 @@ public class SocialServiceImpl implements SocialService {
             return Set.of();
         }
 
-        return socialMapper
-                .toDetailsResponse(requests);
+        return requests.stream()
+                .map(socialMapper::toDetailsResponse)
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -74,14 +80,15 @@ public class SocialServiceImpl implements SocialService {
         // Create pending friendship
         Friendship friendship = Friendship.builder()
                 .senderId(userIDTEMP)
-                .receiverId(request.id)
+                .receiverId(request.getTargetUserId())
                 .build();
 
         // Send command to validate user
+        // TODO: Call to user service for fetching username from id
         messageSender.sendValidateSingleUserCommand(
                 new ValidateSingleUserCommand(
                         friendship.getId(),
-                        friendship.getReceiverId()
+                        "username"
                 )
         );
 
@@ -93,7 +100,7 @@ public class SocialServiceImpl implements SocialService {
     }
 
     @Override
-    public void acceptFriendRequest(AcceptFriendRequest request) {
+    public void acceptFriendRequest(FriendRequestAction request) {
         // Validation and retrieval encapsulated to ensure ownership and status
         Friendship friendship = findValidPendingRequest(request.getRequestId());
 
@@ -104,7 +111,7 @@ public class SocialServiceImpl implements SocialService {
     }
 
     @Override
-    public void declineFriendRequest(DeclyneFriendRequest request) {
+    public void declineFriendRequest(FriendRequestAction request) {
         Friendship friendship = findValidPendingRequest(request.getRequestId());
 
         friendship.updateStatus(FrienshipStatus.DECLINED);

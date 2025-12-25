@@ -23,7 +23,7 @@ public class MessageListener {
     public void onValidateSingleUser(ValidateSingleUserCommand command) {
         userService
                 .validateUser(
-                    Set.of(command.username()), command.postId()
+                    Set.of(command.username()), command.actionId()
         );
     }
 

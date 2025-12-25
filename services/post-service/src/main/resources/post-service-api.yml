@@ -274,7 +274,6 @@ components:
       required:
         - id
         - content
-        - username
         - createdAt
         - updatedAt
       properties:
@@ -283,10 +282,9 @@ components:
           format: uuid
         content:
           type: string
-        username:
-          type: string
         tags:
           type: array
+          uniqueItems: true
           items:
             type: string
         createdAt:

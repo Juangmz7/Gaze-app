@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -51,7 +52,9 @@ public class PostServiceImpl implements PostService {
         var savedPost = postRepository.save(post);
         log.info("Pending post created with ID: {}", savedPost.getId());
 
-        return postMapper.toResponse(savedPost);
+        // Return the post with empty tags set (not validated yet)
+        return postMapper
+                .toResponse(savedPost, Set.of());
     }
 
     @Override
@@ -97,7 +100,7 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
 
         messageSender.sendPostCreatedEvent(
-                postMapper.toCreatedEvent(post)
+                postMapper.toCreatedEvent(post, users)
         );
         log.info("Post {} confirmed and tags created for {} users", postId, users != null ? users.size() : 0);
     }
