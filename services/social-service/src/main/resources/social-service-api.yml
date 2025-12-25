@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: Social Service v1
+  description: API for Social Friend Management
+  termsOfService: http://swagger.io/terms/
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+tags:
+  - name: Social
+    description: Operations related to friendships and user connections
+servers:
+  - url: /api/v1/social
+paths:
+  /friend-request:
+    # SEND REQUEST
+    post:
+      tags:
+        - Social
+      description: Send a friend request to another user
+      operationId: sendFriendRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendFriendRequest'
+      responses:
+        '201':
+          description: Friend request sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendRequestResponse'
+        '400':
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+    # GET REQUESTS
+    get:
+      tags:
+        - Social
+      description: Retrieve all pending friend requests for the current user
+      operationId: getFriendRequests
+      responses:
+        '200':
+          description: List of pending requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FriendRequestDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  # ACCEPT REQUEST
+  /friend-request/accept:
+    post:
+      tags:
+        - Social
+      description: Accept a pending friend request
+      operationId: acceptFriendRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendRequestAction'
+      responses:
+        '204':
+          description: Action successful (No Content)
+        '404':
+          description: Friend request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  # DECLINE REQUEST
+  /friend-request/decline:
+    post:
+      tags:
+        - Social
+      description: Decline a pending friend request
+      operationId: declineFriendRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FriendRequestAction'
+      responses:
+        '204':
+          description: Action successful (No Content)
+        '404':
+          description: Friend request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+components:
+  schemas:
+    # --- REQUEST BODIES ---
+    SendFriendRequest:
+      type: object
+      required:
+        - targetUserId
+      properties:
+        targetUserId:
+          type: string
+          format: uuid
+          example: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+
+    FriendRequestAction:
+      type: object
+      required:
+        - requestId
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: "UUID of the friend request to accept or decline"
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+    # --- RESPONSES ---
+    FriendRequestResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        status:
+          type: string
+          enum: [PENDING, ACCEPTED, REJECTED]
+          example: "PENDING"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-12-25T10:00:00Z"
+
+    FriendRequestDetails:
+      type: object
+      description: "Details of a pending friend request"
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: "The ID of the request itself"
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        requesterId:
+          type: string
+          format: uuid
+          description: "The ID of the user who sent the request"
+          example: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-12-25T10:00:00Z"
+
+    # --- ERRORS ---
+    ApiErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+          format: int32
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
