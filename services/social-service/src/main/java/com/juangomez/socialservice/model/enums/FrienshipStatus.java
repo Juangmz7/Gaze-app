@@ -1,4 +1,4 @@
-package com.juangomez.socialservice.dto.enums;
+package com.juangomez.socialservice.model.enums;
 
 public enum FrienshipStatus {
     PENDING,

@@ -1,6 +1,6 @@
-package com.juangomez.socialservice.dto.entity;
+package com.juangomez.socialservice.model.entity;
 
-import com.juangomez.socialservice.dto.enums.FrienshipStatus;
+import com.juangomez.socialservice.model.enums.FrienshipStatus;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,10 +35,10 @@ public class Friendship {
     @Builder
     public Friendship (UUID senderId, UUID receiverId)  {
         if (senderId == null) {
-
+            throw new IllegalArgumentException("Sender id cannot be null");
         }
         if (receiverId == null)  {
-
+            throw new IllegalArgumentException("Receiver id cannot be null");
         }
 
         this.senderId = senderId;
