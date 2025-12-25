@@ -66,7 +66,7 @@ public class MessageSender {
         );
     }
 
-    public void sendPostCommentDeletedEvent (PostLikedEvent event) {
+    public void sendPostCommentDeletedEvent (PostCommentDeletedEvent event) {
         publish(
                 rabbitMqConstants.getRkCommentDeleted(),
                 rabbitMqConstants.getExchangePostEvents(),

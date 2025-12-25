@@ -7,6 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -31,6 +33,9 @@ public class Post {
     @Column(name = "comments_count")
     private int commentsCount;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<PostTag> tags;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
@@ -43,7 +48,7 @@ public class Post {
     private PostStatus status;
 
     @Builder
-    public Post (UUID userId, String content) {
+    public Post(UUID userId, String content) {
         if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
@@ -55,6 +60,7 @@ public class Post {
         this.commentsCount = 0;
         this.likesCount = 0;
         this.status = PostStatus.PENDING;
+        this.tags = new HashSet<>();
     }
 
     // Domain methods
@@ -95,5 +101,28 @@ public class Post {
             throw new IllegalArgumentException("Content is too short");
         }
         this.content = content;
+    }
+
+    // Tag Management Methods
+
+    public void addTag(PostTag tag) {
+        if (tag != null) {
+            this.tags.add(tag);
+        }
+    }
+
+    public void addTags(Set<PostTag> tags) {
+        if (tags != null) {
+            this.tags = tags;
+        }
+    }
+
+    public void removeTag(PostTag tag) {
+        this.tags.remove(tag);
+    }
+
+    // Helper to remove by User ID if needed
+    public void removeTagByUserId(UUID taggedUserId) {
+        this.tags.removeIf(tag -> tag.getTaggedUserId().equals(taggedUserId));
     }
 }

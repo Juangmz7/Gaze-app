@@ -11,15 +11,13 @@ public interface LikeService {
      * Adds a like to a specific post by the user.
      *
      * @param postId   The UUID of the post.
-     * @param username The authenticated username liking the post.
      */
-    void likePost(UUID postId, String username);
+    void likePost(UUID postId);
 
     /**
      * Removes a like from a specific post by the user.
      *
      * @param postId   The UUID of the post.
-     * @param username The authenticated username removing the like.
      */
-    void unlikePost(UUID postId, String username);
+    void unlikePost(UUID postId);
 }

@@ -256,6 +256,7 @@ components:
           minLength: 5
           maxLength: 500
         tags:
+          uniqueItems: true
           type: array
           items:
             type: string
