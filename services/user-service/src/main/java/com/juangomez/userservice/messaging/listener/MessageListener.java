@@ -21,14 +21,16 @@ public class MessageListener {
 
     @RabbitListener(queues = "${rabbitmq.queue.user.validate.single}")
     public void onValidateSingleUser(ValidateSingleUserCommand command) {
-        userService.validateUser(
-                Set.of(command.userId())
+        userService
+                .validateUser(
+                    Set.of(command.username()), command.postId()
         );
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.user.validate.batch}")
     public void onValidateUserBatch(ValidateUserBatchCommand command) {
-        userService.validateUser(command.userIds());
+        userService
+                .validateUser(command.usernames(), command.postId());
     }
 
 }

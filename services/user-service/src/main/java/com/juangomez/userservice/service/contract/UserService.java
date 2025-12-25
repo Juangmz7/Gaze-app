@@ -17,5 +17,5 @@ public interface UserService {
 
     RegisterUserResponse register (RegisterUserRequest request);
 
-    void validateUser(Set<UUID> uuid);
+    void validateUser(Set<String> usernames, UUID postId);
 }

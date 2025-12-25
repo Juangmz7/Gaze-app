@@ -1,5 +1,6 @@
 package com.juangomez.userservice.service.impl;
 
+import com.juangomez.dto.UserContactInfo;
 import com.juangomez.events.user.InvalidUserEvent;
 import com.juangomez.events.user.UserRegisteredEvent;
 import com.juangomez.events.user.ValidUserEvent;
@@ -10,6 +11,7 @@ import com.juangomez.userservice.model.dto.LoginUserResponse;
 import com.juangomez.userservice.model.dto.RegisterUserRequest;
 import com.juangomez.userservice.model.dto.RegisterUserResponse;
 import com.juangomez.userservice.model.entity.User;
+import com.juangomez.userservice.model.enums.UserAccountStatus;
 import com.juangomez.userservice.repository.UserRepository;
 import com.juangomez.userservice.service.contract.UserService;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -77,24 +80,42 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public void validateUser(Set<UUID> userIds) {
-        List<User> foundUsers = userRepository.findAllById(userIds);
+    public void validateUser(Set<String> usernames, UUID postId) {
+        List<User> foundUsers = userRepository
+                .findAllByUsernameInAndStatus(usernames, UserAccountStatus.ACTIVE);
 
-        if (foundUsers.size() != userIds.size()) {
-            Set<UUID> foundIds = foundUsers.stream()
-                    .map(User::getId)
+        if (foundUsers.size() != usernames.size()) {
+            Set<String> foundNames = foundUsers.stream()
+                    .map(User::getUsername)
                     .collect(Collectors.toSet());
 
-            userIds.stream()
-                    .filter(foundIds::contains)
-                    .forEach(userIds::remove);
+            // Calculate the difference: input set minus found set
+            Set<String> invalidUsernames = usernames.stream()
+                    .filter(name -> !foundNames.contains(name))
+                    .collect(Collectors.toSet());
 
-            // Trigger the event with the invalid ids
+            log.warn("Validation failed. Missing users: {}", invalidUsernames);
             messageSender
-                    .sendInvalidUserEvent(new InvalidUserEvent(userIds));
+                    .sendInvalidUserEvent(
+                            new InvalidUserEvent(postId, invalidUsernames)
+                    );
             return;
         }
 
-        messageSender.sendValidUserEvent(new ValidUserEvent());
+        // Map found users to their UUIDs for the valid event
+        Map<UUID, UserContactInfo> validUsersMap = foundUsers.stream()
+                .collect(
+                        Collectors.toMap(
+                                User::getId,
+                                user -> new UserContactInfo(
+                                        user.getUsername(), user.getEmail()
+                                )
+                        )
+                );
+
+        messageSender
+                .sendValidUserEvent(
+                        new ValidUserEvent(postId, validUsersMap)
+                );
     }
 }
