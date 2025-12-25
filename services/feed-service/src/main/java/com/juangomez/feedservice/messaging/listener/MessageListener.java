@@ -2,6 +2,10 @@ package com.juangomez.feedservice.messaging.listener;
 
 import com.juangomez.events.post.*;
 import com.juangomez.events.social.*;
+import com.juangomez.events.user.UserRegisteredEvent;
+import com.juangomez.feedservice.service.contract.FeedService;
+import com.juangomez.feedservice.service.contract.FriendshipService;
+import com.juangomez.feedservice.service.contract.UserReplicaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -12,37 +16,48 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MessageListener {
 
+    private final FeedService feedService;
+    private final FriendshipService friendshipService;
+    private final UserReplicaService userReplicaService;
+
     @RabbitListener(queues = "${rabbitmq.queue.post.created}")
     public void onPostCreated(PostCreatedEvent event) {
+        // Save new post
+        feedService.createFeedItem(event);
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.post.cancelled}")
     public void onPostCancelled(PostCancelledEvent event) {
-
+        feedService.cancelFeedItem(event);
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.post.liked}")
     public void onPostLiked(PostLikedEvent event) {
-
+        feedService.onPostLiked(event);
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.post.unliked}")
     public void onLikeDeleted(PostUnlikedEvent event) {
+        feedService.onPostUnliked(event);
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.comment.created}")
     public void onPostCommentSent(PostCommentSentEvent event) {
+        feedService.onPostCommented(event);
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.comment.deleted}")
     public void onPostCommentDeleted(PostCommentDeletedEvent event) {
+        feedService.onPostCommentDeleted(event);
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.friendship.accepted}")
     public void onFriendshipAccepted(FriendshipAcceptedEvent event) {
+        friendshipService.onFriendshipAccepted(event);
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.friendship.cancelled}")
-    public void onFriendshipCancelled(FriendshipCancelledEvent event) {
+    @RabbitListener(queues = "${rabbitmq.queue.user.registered}")
+    public void onUserRegistered(UserRegisteredEvent event) {
+        userReplicaService.onUserRegistered(event);
     }
 }

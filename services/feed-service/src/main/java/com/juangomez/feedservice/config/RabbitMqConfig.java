@@ -118,6 +118,18 @@ public class RabbitMqConfig {
                 )
                 .build();
 
+        Queue userRegisteredQueue = QueueBuilder
+                .durable(rabbitMqConstants.getQueueUserRegistered())
+                .withArgument(
+                        "x-dead-letter-exchange",
+                        rabbitMqConstants.getExchangeUserEvents() + ".dlx"
+                )
+                .withArgument(
+                        "x-dead-letter-routing-key",
+                        rabbitMqConstants.getRkUserRegistered() + ".fall-back"
+                )
+                .build();
+
         var postEventsExchange = new TopicExchange(
                 rabbitMqConstants.getExchangePostEvents()
         );
@@ -126,10 +138,15 @@ public class RabbitMqConfig {
                 rabbitMqConstants.getExchangeFriendshipEvents()
         );
 
+        var userEventsExchange = new TopicExchange(
+                        rabbitMqConstants.getExchangeUserEvents()
+        );
+
         return new Declarables(
                 // Exchanges
                 postEventsExchange,
                 friendshipEventsExchange,
+                userEventsExchange,
 
                 // Queues
                 commentCreatedQueue,
@@ -140,6 +157,7 @@ public class RabbitMqConfig {
                 postCreatedQueue,
                 postLikedQueue,
                 postUnlikedQueue,
+                userRegisteredQueue,
 
                 // Bindings
                 // Post

@@ -1,0 +1,192 @@
+openapi: 3.0.3
+info:
+  title: Feed Service v1
+  description: API for Feed Management
+  version: 1.0.0
+servers:
+  - url: /api/v1/feed
+tags:
+  - name: Feed
+    description: Entity which retrieves post data
+
+paths:
+  /:
+    get:
+      tags:
+        - Feed
+      description: Get user feed (timeline)
+      operationId: getUserFeed
+      responses:
+        '200':
+          description: Feed retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /search-post/friend:
+    get:
+      tags:
+        - Feed
+      description: Search feed posts by friend username
+      operationId: searchPostsByFriend
+      parameters:
+        - name: criteria
+          in: query
+          description: The username of the friend to search for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Posts successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedResponse'
+        '400':
+          description: Missing criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /search-post/tags:
+    get:
+      tags:
+        - Feed
+      description: Search feed posts by specific tags
+      operationId: searchPostsByTags
+      parameters:
+        - name: criteria
+          in: query
+          description: Set of tags to search for (comma separated)
+          required: true
+          schema:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+          style: form
+          explode: false
+      responses:
+        '200':
+          description: Posts successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedResponse'
+        '400':
+          description: Missing criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  /search-post/body:
+    get:
+      tags:
+        - Feed
+      description: Search feed posts by content body text
+      operationId: searchPostsByBody
+      parameters:
+        - name: criteria
+          in: query
+          description: Text to search within post bodies
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Posts successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedResponse'
+        '400':
+          description: Missing criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+components:
+  schemas:
+    # --- RESPONSES ---
+    FeedResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/FeedItemResponse'
+        count:
+          type: integer
+          description: Number of items returned
+
+    FeedItemResponse:
+      type: object
+      properties:
+        postId:
+          type: string
+          format: uuid
+        authorId:
+          type: string
+          format: uuid
+        content:
+          type: string
+        likes:
+          type: integer
+          format: int64
+        comments:
+          type: integer
+          format: int64
+        latestComment:
+          type: string
+
+    # --- ERRORS ---
+    ApiErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string

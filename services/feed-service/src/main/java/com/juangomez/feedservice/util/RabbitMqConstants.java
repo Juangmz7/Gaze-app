@@ -33,12 +33,18 @@ public class RabbitMqConstants {
     @Value("${rabbitmq.queue.friendship.cancelled}")
     private String queueFriendshipCancelled;
 
+    @Value("${rabbitmq.queue.user.registered}")
+    private String queueUserRegistered;
+
     // --- Exchanges ---
     @Value("${rabbitmq.exchange.post.events}")
     private String exchangePostEvents;
 
     @Value("${rabbitmq.exchange.friendship.events}")
     private String exchangeFriendshipEvents;
+
+    @Value("${rabbitmq.exchange.user.events}")
+    private String exchangeUserEvents;
 
     // --- Routing Keys ---
     @Value("${rabbitmq.rk.post.created}")
@@ -64,4 +70,7 @@ public class RabbitMqConstants {
 
     @Value("${rabbitmq.rk.friendship.cancelled}")
     private String rkFriendshipCancelled;
+
+    @Value("${rabbitmq.rk.user.registered}")
+    private String rkUserRegistered;
 }
