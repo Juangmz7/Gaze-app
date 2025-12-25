@@ -50,11 +50,11 @@ public class GlobalExceptionHandler {
         return createErrorResponseEntity(exception, request, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({
-    })
-    public ResponseEntity<ApiErrorResponse> handleAuthenticationException(RuntimeException exception, WebRequest request) {
-        return createErrorResponseEntity(exception, request, HttpStatus.UNAUTHORIZED);
-    }
+//    @ExceptionHandler({
+//    })
+//    public ResponseEntity<ApiErrorResponse> handleAuthenticationException(RuntimeException exception, WebRequest request) {
+//        return createErrorResponseEntity(exception, request, HttpStatus.UNAUTHORIZED);
+//    }
 
     @ExceptionHandler({
             AccessDeniedException.class,
@@ -64,12 +64,12 @@ public class GlobalExceptionHandler {
         return createErrorResponseEntity(exception, request, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler({
-
-    })
-    public ResponseEntity<ApiErrorResponse> handleNotFoundException(RuntimeException exception, WebRequest request) {
-        return createErrorResponseEntity(exception, request, HttpStatus.NOT_FOUND);
-    }
+//    @ExceptionHandler({
+//
+//    })
+//    public ResponseEntity<ApiErrorResponse> handleNotFoundException(RuntimeException exception, WebRequest request) {
+//        return createErrorResponseEntity(exception, request, HttpStatus.NOT_FOUND);
+//    }
 
     // Other exception
     @ExceptionHandler(RuntimeException.class)
