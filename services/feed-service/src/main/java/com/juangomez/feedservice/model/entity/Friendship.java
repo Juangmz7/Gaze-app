@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "friendships")
+@IdClass(FriendshipId.class)
 @Getter
 @NoArgsConstructor
 public class Friendship {
