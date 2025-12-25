@@ -7,9 +7,10 @@ import java.util.UUID;
 
 public record PostCancelledEvent (
         UUID messageId,
+        UUID postId,
         Instant occurredAt
 ) implements DomainMessage {
-    public PostCancelledEvent() {
-        this(UUID.randomUUID(), Instant.now());
+    public PostCancelledEvent(UUID postId) {
+        this(UUID.randomUUID(), postId, Instant.now());
     }
 }

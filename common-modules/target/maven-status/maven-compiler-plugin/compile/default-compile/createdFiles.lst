@@ -8,6 +8,7 @@ com\juangomez\events\social\FriendshipAcceptedEvent.class
 com\juangomez\events\post\PostCommentDeletedEvent.class
 com\juangomez\events\social\PendingFriendshipCreatedEvent.class
 com\juangomez\events\user\InvalidUserEvent.class
+com\juangomez\dto\UserContactInfo.class
 com\juangomez\events\post\PostCreatedEvent.class
 com\juangomez\events\user\ValidUserEvent.class
 com\juangomez\events\post\PostUnlikedEvent.class

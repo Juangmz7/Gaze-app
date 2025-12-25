@@ -7,9 +7,12 @@ import java.util.UUID;
 
 public record PostLikedEvent (
         UUID messageId,
+        UUID id,
+        UUID postId,
+        UUID userId,
         Instant occurredAt
 ) implements DomainMessage {
-    public PostLikedEvent() {
-        this(UUID.randomUUID(), Instant.now());
+    public PostLikedEvent(UUID id, UUID postId, UUID userId) {
+        this(UUID.randomUUID(), id, postId, userId, Instant.now());
     }
 }

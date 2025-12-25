@@ -8,10 +8,11 @@ import java.util.UUID;
 
 public record InvalidUserEvent (
         UUID messageId,
-        Set<UUID> userId,
+        UUID actionId,
+        Set<String> users,
         Instant occurredAt
 ) implements DomainMessage {
-    public InvalidUserEvent(Set<UUID> userId) {
-        this(UUID.randomUUID(), userId, Instant.now());
+    public InvalidUserEvent(UUID postId, Set<String> users) {
+        this(UUID.randomUUID(), postId, users, Instant.now());
     }
 }

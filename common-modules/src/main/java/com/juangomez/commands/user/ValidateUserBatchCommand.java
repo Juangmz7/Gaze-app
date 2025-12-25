@@ -8,10 +8,11 @@ import java.util.UUID;
 
 public record ValidateUserBatchCommand(
         UUID messageId,
-        Set<UUID> userIds,
+        UUID postId,
+        Set<String> usernames,
         Instant occurredAt
 ) implements DomainMessage {
-    public ValidateUserBatchCommand(Set<UUID> userId) {
-        this(UUID.randomUUID(), userId, Instant.now());
+    public ValidateUserBatchCommand(UUID postId, Set<String> usernames) {
+        this(UUID.randomUUID(), postId, usernames, Instant.now());
     }
 }

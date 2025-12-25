@@ -7,9 +7,12 @@ import java.util.UUID;
 
 public record PostUnlikedEvent (
         UUID messageId,
+        UUID id,
+        UUID postId,
+        UUID userId,
         Instant occurredAt
 ) implements DomainMessage {
-    public PostUnlikedEvent() {
-        this(UUID.randomUUID(), Instant.now());
+    public PostUnlikedEvent(UUID id, UUID postId, UUID userId) {
+        this(UUID.randomUUID(), id, postId, userId, Instant.now());
     }
 }

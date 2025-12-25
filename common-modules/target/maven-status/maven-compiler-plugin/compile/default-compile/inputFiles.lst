@@ -11,6 +11,7 @@ C:\Proyectos\DA-Microservices\common-modules\src\main\java\com\juangomez\events\
 C:\Proyectos\DA-Microservices\common-modules\src\main\java\com\juangomez\commands\user\ValidateUserBatchCommand.java
 C:\Proyectos\DA-Microservices\common-modules\src\main\java\com\juangomez\events\social\FriendshipCancelledEvent.java
 C:\Proyectos\DA-Microservices\common-modules\src\main\java\com\juangomez\DomainMessage.java
+C:\Proyectos\DA-Microservices\common-modules\src\main\java\com\juangomez\dto\UserContactInfo.java
 C:\Proyectos\DA-Microservices\common-modules\src\main\java\com\juangomez\events\post\PostCommentDeletedEvent.java
 C:\Proyectos\DA-Microservices\common-modules\src\main\java\com\juangomez\events\user\UserRegisteredEvent.java
 C:\Proyectos\DA-Microservices\common-modules\src\main\java\com\juangomez\events\social\FriendshipDeclinedEvent.java
