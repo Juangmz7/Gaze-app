@@ -26,6 +26,7 @@ public class Friendship {
     @Column(nullable = false)
     private UUID receiverId;
 
+    @Column(nullable = false)
     private FrienshipStatus status;
 
     @CreationTimestamp
@@ -48,7 +49,7 @@ public class Friendship {
 
     public void updateStatus (FrienshipStatus status)  {
         if (status == null)  {
-
+            throw new IllegalArgumentException("Friendship status cannot be null");
         }
         this.status = status;
     }
