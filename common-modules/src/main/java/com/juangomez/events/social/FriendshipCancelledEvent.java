@@ -7,9 +7,12 @@ import java.util.UUID;
 
 public record FriendshipCancelledEvent (
         UUID messageId,
+        UUID friendshipId,
+        UUID idA,
+        UUID idB,
         Instant occurredAt
 ) implements DomainMessage {
-    public FriendshipCancelledEvent() {
-        this(UUID.randomUUID(), Instant.now());
+    public FriendshipCancelledEvent(UUID friendshipId, UUID idA, UUID idB) {
+        this(UUID.randomUUID(), friendshipId, idA, idB, Instant.now());
     }
 }
