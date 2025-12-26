@@ -80,59 +80,62 @@ public class SocialServiceImpl implements SocialService {
     @Override
     public FriendRequestResponse sendFriendRequest(SendFriendRequest request) {
 
-        //TODO Extract id from authentication
-
-        // Check the request is not for himself
+        // Self-request validation
         if (request.getTargetUserId().equals(userIDTEMP)) {
-            throw new IllegalStateException("Illegal state");
+            throw new IllegalStateException("Cannot send request to yourself");
         }
 
-        Friendship friendship = socialRepository
-                .findFriendshipBetween(
-                        request.getTargetUserId(), userIDTEMP
-                );
+        Friendship existingFriendship = socialRepository.findFriendshipBetween(
+                request.getTargetUserId(), userIDTEMP
+        );
 
-        // Check if there is an accepted request
-        if (friendship != null) {
-            if (FrienshipStatus.ACCEPTED.equals(friendship.getStatus())
-            ) {
+        Friendship friendshipToSave;
+
+        if (existingFriendship != null) {
+            // Validate active states
+            if (FrienshipStatus.ACCEPTED.equals(existingFriendship.getStatus())) {
                 throw new IllegalArgumentException("Friendship already exists");
             }
-
-            // Check if there is a pending request already
-            if (FrienshipStatus.PENDING.equals(friendship.getStatus())) {
+            if (FrienshipStatus.PENDING.equals(existingFriendship.getStatus())) {
                 throw new IllegalArgumentException("Pending friendship already exists");
             }
+
+            // Reactivate DECLINED or CANCELLED relationship
+            // Update roles in case they swapped
+            existingFriendship
+                    .reactivate(userIDTEMP, request.getTargetUserId());
+
+            friendshipToSave = existingFriendship;
+
+        } else {
+            // Create new relationship
+            friendshipToSave = Friendship.builder()
+                    .senderId(userIDTEMP)
+                    .receiverId(request.getTargetUserId())
+                    .build();
         }
 
-        // Create pending friendship
-        Friendship newFriendship = Friendship.builder()
-                .senderId(userIDTEMP)
-                .receiverId(request.getTargetUserId())
-                .build();
+        // saveAndFlush ensures timestamp and ID are ready for mapping/events
+        var savedFriendship = socialRepository.saveAndFlush(friendshipToSave);
+        log.info("Friendship processed. ID: {}", savedFriendship.getId());
 
-        socialRepository.save(newFriendship);
-        log.info("User sent for validating id {}", newFriendship.getReceiverId());
-
+        // Notify events
         messageSender.sendPendingFriendshipCreatedEvent(
                 new PendingFriendshipCreatedEvent(
-                        newFriendship.getId(),
-                        newFriendship.getSenderId(),
-                        newFriendship.getReceiverId()
+                        savedFriendship.getId(),
+                        savedFriendship.getSenderId(),
+                        savedFriendship.getReceiverId()
                 )
         );
 
-        // Send command to validate user
-        // TODO: Call to user service for fetching username from id
         messageSender.sendValidateSingleUserCommand(
                 new ValidateSingleUserCommand(
-                        newFriendship.getId(),
-                        "pedro"
+                        savedFriendship.getId(),
+                        "d" // TODO: Fetch real username
                 )
         );
 
-        return socialMapper
-                .toResponse(newFriendship);
+        return socialMapper.toResponse(savedFriendship);
     }
 
     @Override

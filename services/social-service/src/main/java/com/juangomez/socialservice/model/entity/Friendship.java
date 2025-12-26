@@ -27,10 +27,11 @@ public class Friendship {
     private UUID receiverId;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private FrienshipStatus status;
 
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private Instant sentAt;
 
     @Builder
@@ -52,5 +53,33 @@ public class Friendship {
             throw new IllegalArgumentException("Friendship status cannot be null");
         }
         this.status = status;
+    }
+
+    public void setSenderId(UUID senderId) {
+        if (senderId == null) {
+            throw new IllegalArgumentException("Sender id cannot be null");
+        }
+        this.senderId = senderId;
+    }
+
+    public void setReceiverId(UUID receiverId) {
+        if (receiverId == null) {
+            throw new IllegalArgumentException("Receiver id cannot be null");
+        }
+        this.receiverId = receiverId;
+    }
+
+    public void setSentAt(Instant sentAt) {
+        if (sentAt == null) {
+            throw new IllegalArgumentException("Date cannot be null");
+        }
+        this.sentAt = sentAt;
+    }
+
+    public void reactivate(UUID senderId, UUID receiverId) {
+        setSenderId(senderId);
+        setReceiverId(receiverId);
+        this.status = FrienshipStatus.PENDING;
+        this.sentAt = Instant.now();
     }
 }
