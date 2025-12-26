@@ -19,7 +19,10 @@ public class MessageListener {
 
     private final UserService userService;
 
-    @RabbitListener(queues = "${rabbitmq.queue.user.validate.single}")
+    @RabbitListener(
+            queues = "${rabbitmq.queue.user.validate.single}",
+            errorHandler = "validationErrorHandler"
+    )
     public void onValidateSingleUser(ValidateSingleUserCommand command) {
         userService
                 .validateUser(
@@ -27,7 +30,10 @@ public class MessageListener {
         );
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.user.validate.batch}")
+    @RabbitListener(
+            queues = "${rabbitmq.queue.user.validate.batch}",
+            errorHandler = "validationErrorHandler"
+    )
     public void onValidateUserBatch(ValidateUserBatchCommand command) {
         userService
                 .validateUser(command.usernames(), command.postId());

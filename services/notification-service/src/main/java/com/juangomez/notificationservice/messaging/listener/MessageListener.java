@@ -16,12 +16,18 @@ public class MessageListener {
         log.info("Received event: {}", eventName);
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.post.liked}")
+    @RabbitListener(
+            queues = "${rabbitmq.queue.post.liked}",
+            errorHandler = "validationErrorHandler"
+    )
     public void onPostLiked(PostLikedEvent event) {
         logReceivedEvent("PostLikedEvent");
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.post.liked}")
+    @RabbitListener(
+            queues = "${rabbitmq.queue.post.liked}",
+            errorHandler = "validationErrorHandler"
+    )
     public void onCommentSent(PostCommentSentEvent event) {
         logReceivedEvent("PostCommentSentEvent");
     }
