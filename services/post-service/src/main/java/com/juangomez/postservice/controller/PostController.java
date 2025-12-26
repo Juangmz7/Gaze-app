@@ -3,7 +3,7 @@ package com.juangomez.postservice.controller;
 import com.juangomez.postservice.api.PostApi;
 import com.juangomez.postservice.model.dto.CreatePostRequest;
 import com.juangomez.postservice.model.dto.CreatePostResponse;
-import com.juangomez.postservice.service.contract.PostService; // Asumido
+import com.juangomez.postservice.service.contract.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
