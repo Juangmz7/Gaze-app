@@ -82,6 +82,11 @@ public class SocialServiceImpl implements SocialService {
 
         //TODO Extract id from authentication
 
+        // Check the request is not for himself
+        if (request.getTargetUserId().equals(userIDTEMP)) {
+            throw new IllegalStateException("Illegal state");
+        }
+
         Friendship friendship = socialRepository
                 .findFriendshipBetween(
                         request.getTargetUserId(), userIDTEMP
