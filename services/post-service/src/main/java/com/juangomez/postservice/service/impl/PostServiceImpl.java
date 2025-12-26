@@ -41,6 +41,9 @@ public class PostServiceImpl implements PostService {
                 .content(request.getBody())
                 .build();
 
+        var savedPost = postRepository.save(post);
+        log.info("Pending post created with ID: {}", savedPost.getId());
+
         // Validate users
         messageSender
                 .sendValidateUserBatchCommand(
@@ -49,18 +52,28 @@ public class PostServiceImpl implements PostService {
                         )
                 );
 
-        var savedPost = postRepository.save(post);
-        log.info("Pending post created with ID: {}", savedPost.getId());
-
         // Return the post with empty tags set (not validated yet)
         return postMapper
-                .toResponse(savedPost, Set.of());
+                .toResponse(
+                        savedPost,
+                        request.getTags()
+                );
     }
 
     @Override
     public void deletePost(UUID id) {
-        var post = postRepository.findByIdAndStatus(id, PostStatus.POSTED)
+        if(id == null) {
+            log.warn("Event ignored: Post id is null");
+            return;
+        }
+
+        var post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+
+        if (post.getStatus().equals(PostStatus.CANCELLED)) {
+            log.info("Post already cancelled");
+            return;
+        }
 
         if (!post.getUserId().equals(userIDtemporalTEST)) {
             throw new SecurityException("User is not the owner of the post");
