@@ -55,7 +55,7 @@ public class Post {
         if (content == null || content.trim().isEmpty()) {
             throw new IllegalArgumentException("Content cannot be empty");
         }
-        this.content = content;
+        this.content = content.trim();
         this.userId = userId;
         this.commentsCount = 0;
         this.likesCount = 0;
