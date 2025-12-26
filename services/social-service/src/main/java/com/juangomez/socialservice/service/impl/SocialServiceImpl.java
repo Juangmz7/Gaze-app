@@ -83,7 +83,7 @@ public class SocialServiceImpl implements SocialService {
         //TODO Extract id from authentication
 
         Friendship friendship = socialRepository
-                .findByReceiverIdAndSenderId(
+                .findFriendshipBetween(
                         request.getTargetUserId(), userIDTEMP
                 );
 
@@ -184,7 +184,7 @@ public class SocialServiceImpl implements SocialService {
         // Save new state
         socialRepository
                 .save(friendship.get());
-        
+
         messageSender.sendFriendshipCancelledEvent(
                 new FriendshipCancelledEvent(
                         friendship.get().getId(),
