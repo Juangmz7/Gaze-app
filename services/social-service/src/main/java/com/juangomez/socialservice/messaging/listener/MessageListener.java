@@ -25,7 +25,7 @@ public class MessageListener {
     public void onInvalidUser(InvalidUserEvent event) {
         logReceivedEvent("InvalidUserEvent");
         socialService
-                .onIvalidUserSent(event);
+                .onInvalidUserSent(event);
     }
 
 }

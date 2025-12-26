@@ -20,6 +20,6 @@ public interface SocialService {
 
     void declineFriendRequest(FriendRequestAction request);
 
-    void onIvalidUserSent (InvalidUserEvent event);
+    void onInvalidUserSent(InvalidUserEvent event);
 
 }
