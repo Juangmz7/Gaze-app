@@ -32,6 +32,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentPostResponse addComment(UUID postId, CommentPostRequest request) {
+        // TODO: Check if the user is a friend of the post's owner
+
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found"));
 
@@ -57,13 +59,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteComment(UUID postId, UUID commentId) {
+    public void deleteComment(UUID commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
-
-        if (!comment.getPost().getId().equals(postId)) {
-            throw new IllegalArgumentException("Comment does not belong to the specified post");
-        }
 
         // If user is not either the post-creator or the comment sender
         if (!comment.getPost().getUserId().equals(userIDtemporalTEST)

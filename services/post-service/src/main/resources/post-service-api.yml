@@ -203,19 +203,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
 
-  /{postId}/comment/{commentId}:
+  /comment/{commentId}:
     delete:
       tags:
         - Comment
       description: Delete a specific comment
       operationId: deletePostComment
       parameters:
-        - name: postId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
         - name: commentId
           in: path
           required: true

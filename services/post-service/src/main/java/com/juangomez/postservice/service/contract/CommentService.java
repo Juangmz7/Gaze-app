@@ -24,5 +24,5 @@ public interface CommentService {
      * @param postId    The UUID of the post.
      * @param commentId The UUID of the comment to delete.
      */
-    void deleteComment(UUID postId, UUID commentId);
+    void deleteComment(UUID commentId);
 }
