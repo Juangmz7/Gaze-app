@@ -12,12 +12,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class MessageListener {
 
+    private void logReceivedEvent(String eventName) {
+        log.info("Received event: {}", eventName);
+    }
+
     @RabbitListener(queues = "${rabbitmq.queue.post.liked}")
     public void onPostLiked(PostLikedEvent event) {
+        logReceivedEvent("PostLikedEvent");
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.post.liked}")
     public void onCommentSent(PostCommentSentEvent event) {
+        logReceivedEvent("PostCommentSentEvent");
     }
 
     // TODO: Add onUser tagged event
