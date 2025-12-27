@@ -163,6 +163,10 @@ public class RabbitMqConfig {
                 userRegisteredQueue,
 
                 // Bindings
+                BindingBuilder
+                        .bind(userRegisteredQueue)
+                        .to(userEventsExchange)
+                        .with(rabbitMqConstants.getRkUserRegistered()),
                 // Post
                 BindingBuilder
                         .bind(postCreatedQueue).
