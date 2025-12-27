@@ -41,7 +41,7 @@ public class PostServiceImpl implements PostService {
                 .content(request.getBody())
                 .build();
 
-        var savedPost = postRepository.save(post);
+        var savedPost = postRepository.saveAndFlush(post);
         log.info("Pending post created with ID: {}", savedPost.getId());
 
         // Validate users
