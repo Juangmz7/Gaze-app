@@ -7,12 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 @Repository
 public interface SocialRepository extends JpaRepository<Friendship, UUID> {
-    Set<Friendship> findAllByReceiverIdAndStatus(UUID receiverId, FrienshipStatus status);
 
     @Query("""
           SELECT friendship
@@ -26,4 +26,9 @@ public interface SocialRepository extends JpaRepository<Friendship, UUID> {
            @Param("receiverId") UUID receiverId,
            @Param("senderId") UUID senderId
     );
+
+
+    Optional<Friendship> findByIdAndStatus(UUID id, FrienshipStatus status);
+
+    Set<Friendship> findAllByIdAndStatus(UUID id, FrienshipStatus status);
 }

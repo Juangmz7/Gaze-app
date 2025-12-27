@@ -17,6 +17,7 @@ import com.juangomez.socialservice.model.enums.FrienshipStatus;
 import com.juangomez.socialservice.messaging.sender.MessageSender;
 import com.juangomez.socialservice.repository.SocialRepository;
 import com.juangomez.socialservice.service.contract.SocialService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 public class SocialServiceImpl implements SocialService {
 
     private final UUID userIDTEMP = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    private final UUID receiverTest = UUID.fromString("7cc6d875-246c-4782-a9a1-aa778bf096fa");
     private final MessageSender messageSender;
     private final SocialMapper socialMapper;
     private final SocialRepository socialRepository;
@@ -50,7 +52,7 @@ public class SocialServiceImpl implements SocialService {
     private Friendship findValidPendingRequest(UUID requestId) {
         //TODO Get token user check if I am the receiver
         return socialRepository.findById(requestId)
-                .filter(f -> f.getReceiverId().equals(userIDTEMP))
+                .filter(f -> f.getReceiverId().equals(receiverTest))
                 .filter(f -> f.getStatus() == FrienshipStatus.PENDING)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
@@ -62,7 +64,7 @@ public class SocialServiceImpl implements SocialService {
     public Set<FriendRequestDetails> getFriendRequests() {
         // Extract user id from auth
         Set<Friendship> requests = socialRepository
-                .findAllByReceiverIdAndStatus(
+                .findAllByIdAndStatus(
                         userIDTEMP, FrienshipStatus.PENDING
                 );
 
@@ -128,10 +130,11 @@ public class SocialServiceImpl implements SocialService {
                 )
         );
 
+        // TODO: Set for this a new command for id
         messageSender.sendValidateSingleUserCommand(
                 new ValidateSingleUserCommand(
                         savedFriendship.getId(),
-                        "d" // TODO: Fetch real username
+                        "pedro" // TODO: Fetch real username
                 )
         );
 
@@ -157,7 +160,14 @@ public class SocialServiceImpl implements SocialService {
 
     @Override
     public void declineFriendRequest(FriendRequestAction request) {
-        Friendship friendship = findValidPendingRequest(request.getRequestId());
+        Friendship friendship = socialRepository
+                .findByIdAndStatus(request.getRequestId(), FrienshipStatus.PENDING)
+                .orElseThrow(() -> new EntityNotFoundException("Request not found"));
+
+        // Check the receiver is who is declining
+        if (!receiverTest.equals(friendship.getReceiverId())) {
+            throw new IllegalStateException("Access denied for declining request");
+        }
 
         friendship.updateStatus(FrienshipStatus.DECLINED);
         socialRepository.save(friendship);
