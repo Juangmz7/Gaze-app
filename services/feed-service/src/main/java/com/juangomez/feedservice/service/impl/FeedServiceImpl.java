@@ -56,7 +56,6 @@ public class FeedServiceImpl implements FeedService {
         return feedResponse;
     }
 
-    @Transactional(readOnly = true)
     @Override
     public FeedResponse getUserFeed() {
         // Get Context
@@ -72,7 +71,6 @@ public class FeedServiceImpl implements FeedService {
         return this.manageRetrievedPosts(feed);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public FeedResponse getPostByBody(String body) {
         Set<UUID> socialCircle = friendshipService
@@ -88,7 +86,6 @@ public class FeedServiceImpl implements FeedService {
         return this.manageRetrievedPosts(feed);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public FeedResponse getPostByTags(Set<String> tags) {
         Set<UUID> socialCircle = friendshipService
@@ -104,7 +101,6 @@ public class FeedServiceImpl implements FeedService {
         return this.manageRetrievedPosts(feed);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public FeedResponse getPostByFriend(String friendUsername) {
         // Find Friend ID locally
@@ -130,6 +126,7 @@ public class FeedServiceImpl implements FeedService {
 
     // --- LISTENER HANDLERS ---
 
+    @Transactional
     @Override
     public void createFeedItem(PostCreatedEvent event) {
         // Check if already exists
@@ -153,6 +150,7 @@ public class FeedServiceImpl implements FeedService {
         log.info("Saved feed item for post {}", feedItem.getPostId());
     }
 
+    @Transactional
     @Override
     public void cancelFeedItem(PostCancelledEvent event) {
         // Check if already exists
@@ -164,6 +162,7 @@ public class FeedServiceImpl implements FeedService {
         feedRepository.deleteByPostId(event.postId());
     }
 
+    @Transactional
     @Override
     public void onPostLiked(PostLikedEvent event) {
         if (!feedRepository.existsByPostId(event.postId())) {
@@ -182,6 +181,7 @@ public class FeedServiceImpl implements FeedService {
         log.info("Updated post {} likes count incremented", feedItem.getPostId());
     }
 
+    @Transactional
     @Override
     public void onPostUnliked(PostUnlikedEvent event) {
         if (!feedRepository.existsByPostId(event.postId())) {
@@ -201,6 +201,7 @@ public class FeedServiceImpl implements FeedService {
         log.info("Updated post {} likes count decremented", feedItem.getPostId());
     }
 
+    @Transactional
     @Override
     public void onPostCommented(PostCommentSentEvent event) {
         if (!feedRepository.existsByPostId(event.postId())) {
@@ -220,6 +221,7 @@ public class FeedServiceImpl implements FeedService {
         log.info("Updated post {} comments count incremented", feedItem.getPostId());
     }
 
+    @Transactional
     @Override
     public void onPostCommentDeleted(PostCommentDeletedEvent event) {
         if (!feedRepository.existsByPostId(event.postId())) {
