@@ -41,6 +41,7 @@ public class UserReplicaServiceImpl implements UserReplicaService {
         );
     }
 
+    @Transactional
     @Override
     public void onUserRegistered(UserRegisteredEvent event) {
         if (userReplicaRepository.existsById(event.userId())) {
