@@ -1,4 +1,4 @@
-package com.juangomez.socialservice.config;
+package com.juangomez.userservice.config.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;

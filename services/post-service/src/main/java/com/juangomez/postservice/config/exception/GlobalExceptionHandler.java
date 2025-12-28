@@ -1,10 +1,10 @@
-package com.juangomez.feedservice.config.exception;
+package com.juangomez.postservice.config.exception;
 
 
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
-import com.juangomez.feedservice.model.dto.ApiErrorResponse;
+import com.juangomez.postservice.model.dto.ApiErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-        EntityNotFoundException.class
+            EntityNotFoundException.class
     })
     public ResponseEntity<ApiErrorResponse> handleNotFoundException(RuntimeException exception, WebRequest request) {
         return createErrorResponseEntity(exception, request, HttpStatus.NOT_FOUND);

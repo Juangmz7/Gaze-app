@@ -1,4 +1,4 @@
-package com.juangomez.postservice.config;
+package com.juangomez.notificationservice.config.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
