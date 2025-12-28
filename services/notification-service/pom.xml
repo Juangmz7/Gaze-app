@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>com.juangomez</groupId>
-            <artifactId>common-modules</artifactId>
+            <artifactId>common-events</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -17,7 +17,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>common-modules</module>
+        <module>common-events</module>
         <module>services/feed-service</module>
         <module>services/notification-service</module>
         <module>services/post-service</module>
