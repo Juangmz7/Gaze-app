@@ -23,6 +23,7 @@
         <module>services/post-service</module>
         <module>services/social-service</module>
         <module>services/user-service</module>
+        <module>common-security</module>
     </modules>
 
     <properties>
