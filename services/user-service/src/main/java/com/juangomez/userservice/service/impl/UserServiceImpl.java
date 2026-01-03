@@ -13,10 +13,16 @@ import com.juangomez.userservice.model.dto.RegisterUserResponse;
 import com.juangomez.userservice.model.entity.User;
 import com.juangomez.userservice.model.enums.UserAccountStatus;
 import com.juangomez.userservice.repository.UserRepository;
+import com.juangomez.userservice.service.contract.JwtService;
 import com.juangomez.userservice.service.contract.UserService;
+import com.juangomez.userservice.util.PasswordHasher;
+import com.juangomez.userservice.util.TokenPayload;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -37,10 +43,36 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final MessageSender messageSender;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final PasswordHasher passwordHasher;
 
     @Override
     public LoginUserResponse login(LoginUserRequest request) {
-        return null;  // TODO
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
+
+        // Fetch user details
+        User user = userRepository
+                .findByUsername(request.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        log.info("User authenticated, generating access response");
+
+        String accessToken = jwtService.generateToken(
+                TokenPayload.builder().
+                userId(user.getId())
+                .username(user.getUsername()).status(user.getStatus())
+                .build()
+        );
+        var response = new LoginUserResponse();
+        response.accessToken(accessToken);
+
+        return response;
     }
 
     @Override
@@ -56,13 +88,14 @@ public class UserServiceImpl implements UserService {
             );
         }
 
-        //TODO Hash user password
+        String hashedPassword = passwordHasher
+                .encode(request.getPassword());
 
         // Create a new user managed by the model
         User user = User.builder()
                 .email(request.getEmail())
                 .username(request.getUsername())
-                .passwordHash(request.getPassword())
+                .passwordHash(hashedPassword)
                 .build();
 
         var savedUser = userRepository.save(user);
