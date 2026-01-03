@@ -46,7 +46,7 @@ public class AuthSecurityConfig {
                         .requestMatchers(
                               "/api/v1/user/login",
                                 "/api/v1/user/register",
-                                "/.well-known/jwks.json",
+                                "api/v1/user/.well-known/jwks.json",
                                 "/webjars/**",
                                 "/error",
                                 "/v3/api-docs/**",
