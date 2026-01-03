@@ -32,6 +32,7 @@ public class User {
     private String passwordHash;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private UserAccountStatus status;
 
     @CreationTimestamp

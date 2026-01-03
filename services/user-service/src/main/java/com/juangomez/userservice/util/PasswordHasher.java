@@ -1,15 +1,16 @@
 package com.juangomez.userservice.util;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+@AllArgsConstructor
 @Component
 public class PasswordHasher {
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder =
-            new BCryptPasswordEncoder(12);
+    private final PasswordEncoder passwordEncoder;
 
     public String encode(String password) {
-        return bCryptPasswordEncoder.encode(password);
+        return passwordEncoder.encode(password);
     }
 }

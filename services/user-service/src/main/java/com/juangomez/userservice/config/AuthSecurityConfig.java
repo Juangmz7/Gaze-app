@@ -1,6 +1,6 @@
 package com.juangomez.userservice.config;
 
-import lombok.AllArgsConstructor;
+import com.juangomez.userservice.service.impl.SecurityUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -13,13 +13,17 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@AllArgsConstructor
 public class AuthSecurityConfig {
 
     final private UserDetailsService userDetailsService;
+
+    public AuthSecurityConfig(SecurityUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     // Higher priority than common-security config
     @Bean
@@ -30,8 +34,11 @@ public class AuthSecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/v1/api/user/login",
-                                "/v1/api/user/register"
+                              //  "/v1/api/user/login",
+                                "/login",
+                               // "/v1/api/user/register"
+                                "/register",
+                                "/v1/api/user/.well-known/jwks.json"
                         ).permitAll() // Allow access without token or headers
                         .anyRequest().authenticated()
                 )
@@ -46,8 +53,13 @@ public class AuthSecurityConfig {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(12)); // Cost factor 12
+        provider.setPasswordEncoder(passwordEncoder()); // Cost factor 12
         return provider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
     }
 
     /**

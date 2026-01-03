@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -45,7 +46,8 @@ public class GlobalExceptionHandler {
             ConstraintViolationException.class,         // Request parameters validation
             MethodArgumentTypeMismatchException.class,   // When cannot convert a request parameter to object
             MissingServletRequestParameterException.class,
-            IllegalArgumentException.class
+            IllegalArgumentException.class,
+            BadCredentialsException.class
     })
     public ResponseEntity<ApiErrorResponse> handleBadRequestException(RuntimeException exception, WebRequest request) {
         return createErrorResponseEntity(exception, request, HttpStatus.BAD_REQUEST);
