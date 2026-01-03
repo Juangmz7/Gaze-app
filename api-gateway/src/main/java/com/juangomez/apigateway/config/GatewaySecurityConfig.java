@@ -11,6 +11,12 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 public class GatewaySecurityConfig {
 
+    private final CustomReactiveAuthenticationEntryPoint entryPoint;
+
+    public GatewaySecurityConfig(CustomReactiveAuthenticationEntryPoint entryPoint) {
+        this.entryPoint = entryPoint;
+    }
+
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
@@ -39,6 +45,7 @@ public class GatewaySecurityConfig {
                 // This automatically validates the JWT signature against the Public Key
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> {})
+                        .authenticationEntryPoint(entryPoint)
                 )
 
                 .build();
