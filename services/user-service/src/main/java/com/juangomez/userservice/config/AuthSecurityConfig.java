@@ -1,5 +1,6 @@
 package com.juangomez.userservice.config;
 
+import com.juangomez.userservice.service.contract.JwtService;
 import com.juangomez.userservice.service.impl.SecurityUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,15 +15,24 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 public class AuthSecurityConfig {
 
     final private UserDetailsService userDetailsService;
+    final private JwtService jwtService;
 
-    public AuthSecurityConfig(SecurityUserDetailsService userDetailsService) {
+    public AuthSecurityConfig(
+            SecurityUserDetailsService userDetailsService,
+            JwtService jwtService
+    ) {
         this.userDetailsService = userDetailsService;
+        this.jwtService = jwtService;
     }
 
     // Higher priority than common-security config
@@ -36,11 +46,28 @@ public class AuthSecurityConfig {
                         .requestMatchers(
                               "/api/v1/user/login",
                                 "/api/v1/user/register",
-                                "/api/v1/.well-known/jwks.json"
+                                "/api/v1/.well-known/jwks.json",
+                                "/webjars/**",
+                                "/error",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
                         ).permitAll() // Allow access without token or headers
                         .anyRequest().authenticated()
                 )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.decoder(jwtDecoder()))
+                )
                 .build();
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        // Decodes the token for validation
+        return NimbusJwtDecoder
+                .withPublicKey(
+                        (RSAPublicKey) jwtService.getPublicKey()
+                ).build();
     }
 
     /**
