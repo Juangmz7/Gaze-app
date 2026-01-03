@@ -5,7 +5,7 @@ spring:
     name: api-gateway
   security:
     oauth2:
-      resource server:
+      resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8081/api/v1/user/.well-known/jwks.json
   cloud:
@@ -22,10 +22,6 @@ spring:
               args:
                 name: commandResilienceConfig
                 fallbackUri: forward:/fallback/command-unavailable
-            - name: RateLimiter
-              args:
-                rateLimiter: commandRateLimitConfig
-                statusCode: TOO_MANY_REQUESTS # Returns 429
 
         # SOCIAL-SERVICE commands
         - id: social-command-route
@@ -39,10 +35,6 @@ spring:
               args:
                 name: commandResilienceConfig
                 fallbackUri: forward:/fallback/command-unavailable
-            - name: RateLimiter
-              args:
-                rateLimiter: commandRateLimitConfig
-                statusCode: TOO_MANY_REQUESTS # Returns 429
 
           # SOCIAL-SERVICE queries
         - id: social-queries-route
@@ -56,10 +48,6 @@ spring:
               args:
                 name: queryResilienceConfig
                 fallbackUri: forward:/fallback/query-unavailable
-            - name: RateLimiter
-              args:
-                rateLimiter: queryRateLimitConfig
-                statusCode: TOO_MANY_REQUESTS # Returns 429
 
           # FEED-SERVICE (CQRS)
         - id: feed-queries-route
@@ -73,10 +61,6 @@ spring:
               args:
                 name: queryResilienceConfig
                 fallbackUri: forward:/fallback/query-unavailable
-            - name: RateLimiter
-              args:
-                rateLimiter: queryRateLimitConfig
-                statusCode: TOO_MANY_REQUESTS # Returns 429
 
         # POST-SERVICE commands
         - id: post-command-route
@@ -90,10 +74,6 @@ spring:
               args:
                 name: commandResilienceConfig
                 fallbackUri: forward:/fallback/command-unavailable
-            - name: RateLimiter
-              args:
-                rateLimiter: commandRateLimitConfig
-                statusCode: TOO_MANY_REQUESTS # Returns 429
 
 # ---------------------------------------------------------
 # Resilience config
@@ -120,17 +100,15 @@ resilience4j:
       commandResilienceConfig:
         timeoutDuration: 3s
 
-  # RATE LIMITER
-  ratelimiter:
-    instances:
-      # Read config
-      queryRateLimitConfig:
-        limitForPeriod: 10      # 10 request
-        limitRefreshPeriod: 1s  # for each second
-        timeoutDuration: 0
-
-      # Write config
-      commandRateLimitConfig:
-        limitForPeriod: 2       # Just 2 commands
-        limitRefreshPeriod: 1s  # Per second
-        timeoutDuration: 0
+# ---------------------------------------------------------
+# Eureka Configuration
+# ---------------------------------------------------------
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.value}
