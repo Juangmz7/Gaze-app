@@ -34,11 +34,11 @@ public class Friendship {
         }
 
         if (idA.compareTo(idB) > 0) {
-            // Swap: idB is smaller, so it goes first
+            // Swap: userIdB is smaller, so it goes first
             this.user1Id = idB;
             this.user2Id = idA;
         } else {
-            // No swap: idA is smaller or equal
+            // No swap: userIdA is smaller or equal
             this.user1Id = idA;
             this.user2Id = idB;
         }
