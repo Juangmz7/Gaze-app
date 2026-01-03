@@ -17,6 +17,7 @@ spring:
           predicates:
             - Path=/api/v1/user/login, /api/v1/user/register
             - Method=POST
+          filters:
             - name: CircuitBreaker
               args:
                 name: commandResilienceConfig
@@ -33,6 +34,7 @@ spring:
             - Path=/api/v1/social/friend-request/**,
             - Method=POST
           filters:
+            - TokenRelay  # For adding the jwt to the request
             - name: CircuitBreaker
               args:
                 name: commandResilienceConfig
@@ -48,6 +50,8 @@ spring:
           predicates:
             - Path=/api/v1/social/friend-request,
             - Method=GET
+          filters:
+            - TokenRelay
             - name: CircuitBreaker
               args:
                 name: queryResilienceConfig
@@ -63,6 +67,8 @@ spring:
           predicates:
             - Path=/api/v1/feed/**,
             - Method=GET
+          filters:
+            - TokenRelay
             - name: CircuitBreaker
               args:
                 name: queryResilienceConfig
@@ -79,6 +85,7 @@ spring:
             - Path=/api/v1/post/**,
             - Method=POST, DELETE
           filters:
+            - TokenRelay
             - name: CircuitBreaker
               args:
                 name: commandResilienceConfig
