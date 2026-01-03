@@ -40,16 +40,16 @@ public class Notification {
             NotificationReason reason
     ) {
         if (recipientId ==  null) {
-
+            throw new IllegalArgumentException("Recipient id cannot be null");
         }
         if (referenceId == null) {
-
+            throw new IllegalArgumentException("Reference id cannot be null");
         }
         if (message ==  null || message.trim().isEmpty())   {
-
+            throw new IllegalArgumentException("Message cannot be empty");
         }
         if (reason  == null)  {
-
+            throw new IllegalArgumentException("Reason cannot be empty");
         }
         this.recipientId = recipientId;
         this.referenceId = referenceId;
