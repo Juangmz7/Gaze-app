@@ -44,9 +44,9 @@ public class AuthSecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                              "/api/v1/user/login",
-                                "/api/v1/user/register",
-                                "/api/v1/.well-known/jwks.json",
+                              "/login",
+                                "/register",
+                                "/.well-known/jwks.json",
                                 "/webjars/**",
                                 "/error",
                                 "/v3/api-docs/**",
