@@ -25,6 +25,7 @@
         <module>services/social-service</module>
         <module>services/user-service</module>
         <module>common-security</module>
+        <module>api-gateway</module>
     </modules>
 
     <properties>
