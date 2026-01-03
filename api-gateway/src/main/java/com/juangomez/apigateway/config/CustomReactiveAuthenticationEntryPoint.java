@@ -2,6 +2,7 @@ package com.juangomez.apigateway.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.juangomez.apigateway.dto.ApiErrorResponse;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,9 +13,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.OffsetDateTime;
 
+/**
+ * Custom handler for 401 Unauthorized errors in the Reactive Gateway.
+ * It intercepts authentication failures and returns a consistent JSON error structure.
+ */
 @Component
 public class CustomReactiveAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
 
@@ -28,25 +32,25 @@ public class CustomReactiveAuthenticationEntryPoint implements ServerAuthenticat
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException ex) {
         ServerHttpResponse response = exchange.getResponse();
 
-        // Set Status and Content-Type
+        // Set HTTP Status and Content-Type headers
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        // Prepare the JSON Body
-        Map<String, Object> errorDetails = new HashMap<>();
-        errorDetails.put("timestamp", java.time.LocalDateTime.now().toString()); // Added this
-        errorDetails.put("status", HttpStatus.UNAUTHORIZED.value());
-        errorDetails.put("error", "Unauthorized");
-        errorDetails.put("message", ex.getMessage());
-        errorDetails.put("path", exchange.getRequest().getPath().value());
+        // Build the standard error response object
+        ApiErrorResponse apiError = new ApiErrorResponse();
+        apiError.timestamp(OffsetDateTime.now());
+        apiError.status(HttpStatus.UNAUTHORIZED.value());
+        apiError.error("Unauthorized");
+        apiError.message(ex.getMessage());
+        apiError.path(exchange.getRequest().getPath().value());
 
-        // Write to response reactively
+        // Serialize object to JSON and write to the reactive response stream
         try {
-            byte[] bytes = objectMapper.writeValueAsBytes(errorDetails);
+            byte[] bytes = objectMapper.writeValueAsBytes(apiError);
             DataBuffer buffer = response.bufferFactory().wrap(bytes);
             return response.writeWith(Mono.just(buffer));
         } catch (JsonProcessingException e) {
-            // Fallback in case of JSON error
+            // Fallback: End response gracefully if serialization fails
             return response.setComplete();
         }
     }
