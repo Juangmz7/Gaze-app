@@ -34,9 +34,9 @@ public class AuthSecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                              "/v1/api/user/login",
-                                "/v1/api/user/register",
-                                "/v1/api/.well-known/jwks.json"
+                              "/api/v1/user/login",
+                                "/api/v1/user/register",
+                                "/api/v1/.well-known/jwks.json"
                         ).permitAll() // Allow access without token or headers
                         .anyRequest().authenticated()
                 )

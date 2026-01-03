@@ -26,8 +26,9 @@ public class GatewaySecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         // Allow unauthenticated access to authentication endpoints (Login/Register)
                         .pathMatchers(
-                                "/v1/api/user/login",
-                                "/v1/api/user/register",
+                                "/api/v1/user/login",
+                                "/login",
+                                "/api/v1/user/register",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/webjars/**",
