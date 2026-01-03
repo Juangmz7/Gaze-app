@@ -1,0 +1,99 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: api-gateway
+  security:
+    oauth2:
+      resource server:
+        jwt:
+          jwk-set-uri: http://localhost:8081/api/v1/user/.well-known/jwks.json
+  cloud:
+    gateway:
+      routes:
+
+        # USER SERVICE
+        - id: users-command-route
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/user/login, /api/v1/user/register
+            - name: CircuitBreaker
+              args:
+                name: commandResilienceConfig
+                fallbackUri: forward:/fallback/command-unavailable
+            - name: RateLimiter
+              args:
+                rateLimiter: commandRateLimitConfig
+                statusCode: TOO_MANY_REQUESTS # Returns 429
+
+        # SOCIAL SERVICE commands
+        - id: social-command-route
+          uri: lb://social-service
+          predicates:
+            - Path=/api/v1/social/friend-request/**,
+            - Method=POST
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: commandResilienceConfig
+                fallbackUri: forward:/fallback/command-unavailable
+            - name: RateLimiter
+              args:
+                rateLimiter: commandRateLimitConfig
+                statusCode: TOO_MANY_REQUESTS # Returns 429# SOCIAL SERVICE
+
+          # SOCIAL SERVICE queries
+        - id: social-queries-route
+          uri: lb://social-service
+          predicates:
+            - Path=/api/v1/social/friend-request,
+            - Method=GET
+            - name: CircuitBreaker
+              args:
+                name: queryResilienceConfig
+                fallbackUri: forward:/fallback/query-unavailable
+            - name: RateLimiter
+              args:
+                rateLimiter: queryRateLimitConfig
+                statusCode: TOO_MANY_REQUESTS # Returns 429
+
+
+# ---------------------------------------------------------
+# Resilience config
+# ---------------------------------------------------------
+resilience4j:
+
+  # CIRCUIT BREAKER
+  circuitbreaker:
+    instances:
+      queryResilienceConfig:
+        slidingWindowSize: 20
+        failureRateThreshold: 40
+        waitDurationInOpenState: 5s
+      commandResilienceConfig:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
+  # TIME LIMITER
+  timelimiter:
+    instances:
+      queryResilienceConfig:
+        timeoutDuration: 1s
+      commandResilienceConfig:
+        timeoutDuration: 3s
+
+  # RATE LIMITER
+  ratelimiter:
+    instances:
+      # Read config
+      queryRateLimitConfig:
+        limitForPeriod: 10      # 10 request
+        limitRefreshPeriod: 1s  # for each second
+        timeoutDuration: 0
+
+      # Write config
+      commandRateLimitConfig:
+        limitForPeriod: 2       # Just 2 commands
+        limitRefreshPeriod: 1s  # Per second
+        timeoutDuration: 0
