@@ -33,7 +33,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RegisterUserResponse'
         '400':
-          description: Invalid input data (e.g. bad email format)
+          description: Invalid input data
           content:
             application/json:
               schema:
@@ -76,6 +76,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
+  # --- NEW ENDPOINT ADDED HERE ---
+  /.well-known/jwks.json:
+    get:
+      tags:
+        - User
+      summary: Get JSON Web Key Set (Public Keys)
+      description: Returns the public keys used to verify JWT signatures.
+      operationId: getJwkSet
+      responses:
+        '200':
+          description: JWK Set retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwkSet'
         '500':
           description: Internal Server Error
           content:
@@ -142,6 +164,41 @@ components:
           type: string
           description: "JWT Token to be used in subsequent requests"
           example: "eyJhbGciOiJIUzI....."
+
+    # --- JWK SCHEMAS ---
+    JwkSet:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/Jwk'
+
+    Jwk:
+      type: object
+      description: JSON Web Key (RFC 7517)
+      properties:
+        kty:
+          type: string
+          example: "RSA"
+          description: Key Type
+        use:
+          type: string
+          example: "sig"
+          description: Public Key Use (sig = signature)
+        kid:
+          type: string
+          description: Key ID
+        alg:
+          type: string
+          example: "RS256"
+          description: Algorithm
+        n:
+          type: string
+          description: Modulus (Base64URL encoded)
+        e:
+          type: string
+          description: Exponent (Base64URL encoded)
 
     # --- ERRORS ---
     ApiErrorResponse:

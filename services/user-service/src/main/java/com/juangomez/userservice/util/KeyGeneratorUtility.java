@@ -18,8 +18,7 @@ public class KeyGeneratorUtility {
             PrivateKey privateKey = keyPair.getPrivate();
             PublicKey publicKey = keyPair.getPublic();
 
-            // Define paths (adjust relative path if needed)
-            // This usually saves to the root of your project
+            // Define paths
             String privateKeyPath = "private.pem";
             String publicKeyPath = "public.pem";
 

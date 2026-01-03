@@ -72,6 +72,7 @@ public class JwtServiceImpl implements JwtService {
 
         long JWT_EXPIRATION = 1000 * 60 * 30;
         return Jwts.builder()
+                .header().keyId("user-service-key-id").and()
                 .claims(claims)
                 .subject(payload.getUsername())
                 .signWith(privateKey, Jwts.SIG.RS256)
@@ -128,6 +129,11 @@ public class JwtServiceImpl implements JwtService {
                 new Date(System.currentTimeMillis()).toInstant(),
                 extractExpiration(token).toInstant()
         );
+    }
+
+    @Override
+    public PublicKey getPublicKey() {
+        return this.publicKey;
     }
 
     /**
