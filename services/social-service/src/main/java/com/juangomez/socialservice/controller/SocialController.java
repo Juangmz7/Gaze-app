@@ -10,13 +10,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/social")
+@RestController
 public class SocialController implements SocialApi {
 
     private final SocialService socialService;

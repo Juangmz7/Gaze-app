@@ -5,11 +5,13 @@ import com.juangomez.feedservice.model.dto.FeedResponse;
 import com.juangomez.feedservice.service.contract.FeedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
 
 @RestController
+@RequestMapping("/api/v1/feed")
 @RequiredArgsConstructor
 public class FeedController implements FeedApi {
 
