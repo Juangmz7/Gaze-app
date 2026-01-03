@@ -11,12 +11,12 @@ spring:
   cloud:
     gateway:
       routes:
-
-        # USER SERVICE
+        # USER-SERVICE commands
         - id: users-command-route
           uri: lb://user-service
           predicates:
             - Path=/api/v1/user/login, /api/v1/user/register
+            - Method=POST
             - name: CircuitBreaker
               args:
                 name: commandResilienceConfig
@@ -26,7 +26,7 @@ spring:
                 rateLimiter: commandRateLimitConfig
                 statusCode: TOO_MANY_REQUESTS # Returns 429
 
-        # SOCIAL SERVICE commands
+        # SOCIAL-SERVICE commands
         - id: social-command-route
           uri: lb://social-service
           predicates:
@@ -40,9 +40,9 @@ spring:
             - name: RateLimiter
               args:
                 rateLimiter: commandRateLimitConfig
-                statusCode: TOO_MANY_REQUESTS # Returns 429# SOCIAL SERVICE
+                statusCode: TOO_MANY_REQUESTS # Returns 429
 
-          # SOCIAL SERVICE queries
+          # SOCIAL-SERVICE queries
         - id: social-queries-route
           uri: lb://social-service
           predicates:
@@ -57,6 +57,36 @@ spring:
                 rateLimiter: queryRateLimitConfig
                 statusCode: TOO_MANY_REQUESTS # Returns 429
 
+          # FEED-SERVICE (CQRS)
+        - id: feed-queries-route
+          uri: lb://feed-service
+          predicates:
+            - Path=/api/v1/feed/**,
+            - Method=GET
+            - name: CircuitBreaker
+              args:
+                name: queryResilienceConfig
+                fallbackUri: forward:/fallback/query-unavailable
+            - name: RateLimiter
+              args:
+                rateLimiter: queryRateLimitConfig
+                statusCode: TOO_MANY_REQUESTS # Returns 429
+
+        # POST-SERVICE commands
+        - id: post-command-route
+          uri: lb://post-service
+          predicates:
+            - Path=/api/v1/post/**,
+            - Method=POST, DELETE
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: commandResilienceConfig
+                fallbackUri: forward:/fallback/command-unavailable
+            - name: RateLimiter
+              args:
+                rateLimiter: commandRateLimitConfig
+                statusCode: TOO_MANY_REQUESTS # Returns 429
 
 # ---------------------------------------------------------
 # Resilience config
