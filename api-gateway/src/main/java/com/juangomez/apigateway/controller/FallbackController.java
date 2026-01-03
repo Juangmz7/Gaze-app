@@ -15,7 +15,7 @@ import java.time.OffsetDateTime;
 public class FallbackController {
 
     // Used when data cannot be retrieved (GET requests)
-    @RequestMapping("/read")
+    @RequestMapping("/query-unavailable")
     public Mono<ResponseEntity<ApiErrorResponse>> fallbackRead(ServerWebExchange exchange) {
 
         ApiErrorResponse errorResponse = new ApiErrorResponse();
@@ -31,7 +31,7 @@ public class FallbackController {
     }
 
     // Used when a transaction fails (POST/PUT/DELETE requests)
-    @RequestMapping("/write")
+    @RequestMapping("/command-unavailable")
     public Mono<ResponseEntity<ApiErrorResponse>> fallbackWrite(ServerWebExchange exchange) {
 
         ApiErrorResponse errorResponse = new ApiErrorResponse();
