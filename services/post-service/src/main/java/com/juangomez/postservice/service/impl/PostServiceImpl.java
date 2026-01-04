@@ -58,14 +58,11 @@ public class PostServiceImpl implements PostService {
 
         // Return the post with empty tags set (not validated yet)
         return postMapper
-                .toResponse(
-                        savedPost,
-                        request.getTags()
-                );
+                .toResponse(savedPost);
     }
 
     @Override
-    public void deletePost(UUID id) {
+    public void deletePostEventHandler(UUID id) {
         if(id == null) {
             log.warn("Event ignored: Post id is null");
             return;
@@ -77,10 +74,6 @@ public class PostServiceImpl implements PostService {
         if (post.getStatus().equals(PostStatus.CANCELLED)) {
             log.info("Post already cancelled");
             return;
-        }
-
-        if (!post.getUserId().equals(getCurrentUserId())) {
-            throw new SecurityException("User is not the owner of the post");
         }
 
         post.delete(); // Domain method (soft delete)
@@ -95,7 +88,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void confirmPost(UUID postId, Map<UUID, UserContactInfo> users) {
+    public void confirmPostEventHandler(UUID postId, Map<UUID, UserContactInfo> users) {
         // Look for pending posts
         Post post = postRepository
                 .findByIdAndStatus(postId, PostStatus.PENDING)
