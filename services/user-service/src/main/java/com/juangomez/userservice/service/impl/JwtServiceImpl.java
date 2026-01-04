@@ -98,7 +98,6 @@ public class JwtServiceImpl implements JwtService {
         return new TokenPayload(
                 UUID.fromString(userIdString),
                 username,
-                // Delete string ROLE_ from the claim
                 UserAccountStatus.valueOf(accountStatus)
         );
     }
