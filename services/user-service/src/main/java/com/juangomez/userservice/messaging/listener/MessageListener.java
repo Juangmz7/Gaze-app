@@ -9,7 +9,6 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -25,9 +24,7 @@ public class MessageListener {
     )
     public void onValidateSingleUser(ValidateSingleUserCommand command) {
         userService
-                .validateUser(
-                    Set.of(command.username()), command.actionId()
-        );
+                .validateSingleUserEventHandler(command);
     }
 
     @RabbitListener(
@@ -36,7 +33,7 @@ public class MessageListener {
     )
     public void onValidateUserBatch(ValidateUserBatchCommand command) {
         userService
-                .validateUser(command.usernames(), command.postId());
+                .validateUserBatchEventHandler(command);
     }
 
 }

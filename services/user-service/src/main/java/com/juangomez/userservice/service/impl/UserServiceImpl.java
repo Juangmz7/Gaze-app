@@ -119,11 +119,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void validateUserBatchEventHandler(ValidateUserBatchCommand command) {
-        if (command.usernames() == null) {
+        if (command.usernames() == null || command.usernames().isEmpty()) {
             validateUsersByIds(command.userIds(), command.postId());
-            return;
+        } else if (command.userIds() == null || command.userIds().isEmpty()) {
+            validateUsersByUsername(command.usernames(), command.postId());
         }
-        validateUsersByUsername(command.usernames(), command.postId());
+        else {
+            log.warn("Command ignored: No user criteria provided in message {}", command.messageId());
+        }
     }
 
     @Override
