@@ -8,6 +8,18 @@ services:
       - "5672:5672"       # Port where applications connect
       - "15672:15672"     # Port for management interface
 
+  redis:
+    image: redis:alpine
+    container_name: redis-rate-limiter
+    ports:
+      - "6379:6379"
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   # --- User Service Database ---
   user-db:
     image: postgres:16-alpine
