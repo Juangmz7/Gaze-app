@@ -20,7 +20,7 @@ public class MessageListener {
             errorHandler = "validationErrorHandler"
     )
     public void onValidUser(ValidUserEvent event) {
-        log.info("Valid notFoundUsers received for post {}", event.postId());
+        log.info("Valid users received for post {}", event.postId());
         postService
                 .confirmPostEventHandler(event.postId(), event.users());
     }
@@ -31,7 +31,7 @@ public class MessageListener {
     )
     public void onInvalidUser(InvalidUserEvent event) {
         log.info("InvalidUserEvent received for post {}", event.actionId());
-        postService.deletePostEventHandler(event.actionId());
+        postService.cancelPostEventHandler(event.actionId());
     }
 
 }

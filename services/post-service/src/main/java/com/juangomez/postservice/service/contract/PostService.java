@@ -24,7 +24,7 @@ public interface PostService {
      *
      * @param id       The UUID of the post to delete.
      */
-    void deletePostEventHandler(UUID id);
+    void cancelPostEventHandler(UUID id);
 
     void confirmPostEventHandler(UUID uuid, Map<UUID, UserContactInfo> users);
 }

@@ -28,7 +28,7 @@ public class PostController implements PostApi {
 
     @Override
     public ResponseEntity<Void> deletePost(UUID id) {
-        postService.deletePostEventHandler(id);
+        postService.cancelPostEventHandler(id);
         return ResponseEntity.noContent().build();
     }
 }

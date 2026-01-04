@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -62,7 +61,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePostEventHandler(UUID id) {
+    public void cancelPostEventHandler(UUID id) {
         if(id == null) {
             log.warn("Event ignored: Post id is null");
             return;
@@ -70,6 +69,8 @@ public class PostServiceImpl implements PostService {
 
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+
+        var wasPostConfirmed = PostStatus.POSTED.equals(post.getStatus());
 
         if (post.getStatus().equals(PostStatus.CANCELLED)) {
             log.info("Post already cancelled");
@@ -79,12 +80,16 @@ public class PostServiceImpl implements PostService {
         post.delete(); // Domain method (soft delete)
         postRepository.save(post);
 
-        log.info("Post {} deleted by user {}", id, post.getUserId());
+        if (!wasPostConfirmed) {
+            log.info("Post {} in PENDING status was cancelled", id);
+            return;
+        }
 
-        // Notify event listeners
+        // Notify event listeners if the post was ever confirmed
         messageSender.sendPostCancelledEvent(
                 new PostCancelledEvent(post.getId())
         );
+        log.info("Post {} deleted by user {}", id, post.getUserId());
     }
 
     @Override
@@ -95,15 +100,24 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new EntityNotFoundException("Post not found: " + postId));
 
         if (users != null && !users.isEmpty()) {
-            users.keySet().forEach(taggedUserId -> {
-                PostTag tag = PostTag.builder()
-                        .post(post)
-                        .taggerUserId(post.getUserId()) // The post owner is the tagger
-                        .taggedUserId(taggedUserId)
-                        .build();
 
-                post.addTag(tag);
-            });
+            try {
+                users.keySet().forEach(taggedUserId -> {
+                    PostTag tag = PostTag.builder()
+                            .post(post)
+                            .taggerUserId(post.getUserId()) // The post owner is the tagger
+                            .taggedUserId(taggedUserId)
+                            .build();
+
+                    post.addTag(tag);
+                });
+
+            } catch (IllegalArgumentException e) {
+                log.error("Fatal business error. Compensating post {}", postId, e);
+                cancelPostEventHandler(postId);
+                return;
+            }
+
         }
 
         post.updateStatus(PostStatus.POSTED);
@@ -112,6 +126,6 @@ public class PostServiceImpl implements PostService {
         messageSender.sendPostCreatedEvent(
                 postMapper.toCreatedEvent(post, users)
         );
-        log.info("Post {} confirmed and tags created for {} notFoundUsers", postId, users != null ? users.size() : 0);
+        log.info("Post {} confirmed and tags created for {} users", postId, users != null ? users.size() : 0);
     }
 }
