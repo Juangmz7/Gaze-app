@@ -17,6 +17,7 @@ import com.juangomez.socialservice.model.enums.FrienshipStatus;
 import com.juangomez.socialservice.messaging.sender.MessageSender;
 import com.juangomez.socialservice.repository.SocialRepository;
 import com.juangomez.socialservice.service.contract.SocialService;
+import com.juangomez.socialservice.util.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,12 +37,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SocialServiceImpl implements SocialService {
 
-    private final UUID userIDTEMP = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
-    private final UUID receiverTest = UUID.fromString("7cc6d875-246c-4782-a9a1-aa778bf096fa");
     private final MessageSender messageSender;
     private final SocialMapper socialMapper;
     private final SocialRepository socialRepository;
+    private final SecurityUtils securityUtils;
 
+    private UUID getCurrentUserId () {
+        return securityUtils.getUserId();
+    }
 
     /**
      * Retrieves a friendship request ensuring:
@@ -50,9 +53,8 @@ public class SocialServiceImpl implements SocialService {
      *  The status is PENDING.
      */
     private Friendship findValidPendingRequest(UUID requestId) {
-        //TODO Get token user check if I am the receiver
         return socialRepository.findById(requestId)
-                .filter(f -> f.getReceiverId().equals(receiverTest))
+                .filter(f -> f.getReceiverId().equals(getCurrentUserId()))
                 .filter(f -> f.getStatus() == FrienshipStatus.PENDING)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
@@ -65,7 +67,7 @@ public class SocialServiceImpl implements SocialService {
         // Extract user id from auth
         Set<Friendship> requests = socialRepository
                 .findAllByIdAndStatus(
-                        userIDTEMP, FrienshipStatus.PENDING
+                        getCurrentUserId(), FrienshipStatus.PENDING
                 );
 
         // Check if there is not any request
@@ -81,14 +83,15 @@ public class SocialServiceImpl implements SocialService {
 
     @Override
     public FriendRequestResponse sendFriendRequest(SendFriendRequest request) {
+        var currentUserId = getCurrentUserId();
 
         // Self-request validation
-        if (request.getTargetUserId().equals(userIDTEMP)) {
+        if (request.getTargetUserId().equals(currentUserId)) {
             throw new IllegalStateException("Cannot send request to yourself");
         }
 
         Friendship existingFriendship = socialRepository.findFriendshipBetween(
-                request.getTargetUserId(), userIDTEMP
+                request.getTargetUserId(), currentUserId
         );
 
         Friendship friendshipToSave;
@@ -105,14 +108,14 @@ public class SocialServiceImpl implements SocialService {
             // Reactivate DECLINED or CANCELLED relationship
             // Update roles in case they swapped
             existingFriendship
-                    .reactivate(userIDTEMP, request.getTargetUserId());
+                    .reactivate(currentUserId, request.getTargetUserId());
 
             friendshipToSave = existingFriendship;
 
         } else {
             // Create new relationship
             friendshipToSave = Friendship.builder()
-                    .senderId(userIDTEMP)
+                    .senderId(currentUserId)
                     .receiverId(request.getTargetUserId())
                     .build();
         }
@@ -155,17 +158,20 @@ public class SocialServiceImpl implements SocialService {
                         friendship.getSenderId(),
                         friendship.getReceiverId())
         );
-        log.info("Friendship request {} accepted by receiver {}", request.getRequestId(), userIDTEMP);
+        log.info("Friendship request {} accepted by receiver {}",
+                request.getRequestId(), getCurrentUserId()
+        );
     }
 
     @Override
     public void declineFriendRequest(FriendRequestAction request) {
+        var currentUserId = getCurrentUserId();
         Friendship friendship = socialRepository
                 .findByIdAndStatus(request.getRequestId(), FrienshipStatus.PENDING)
                 .orElseThrow(() -> new EntityNotFoundException("Request not found"));
 
         // Check the receiver is who is declining
-        if (!receiverTest.equals(friendship.getReceiverId())) {
+        if (!currentUserId.equals(friendship.getReceiverId())) {
             throw new IllegalStateException("Access denied for declining request");
         }
 
@@ -180,7 +186,9 @@ public class SocialServiceImpl implements SocialService {
                 )
         );
 
-        log.info("Friendship request {} declined by receiver {}", request.getRequestId(), userIDTEMP);
+        log.info("Friendship request {} declined by receiver {}",
+                request.getRequestId(), currentUserId
+        );
     }
 
     // --- Listener handler ---

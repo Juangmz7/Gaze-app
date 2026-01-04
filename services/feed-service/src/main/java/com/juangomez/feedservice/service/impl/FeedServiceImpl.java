@@ -11,6 +11,7 @@ import com.juangomez.feedservice.repository.FeedRepository;
 import com.juangomez.feedservice.service.contract.FeedService;
 import com.juangomez.feedservice.service.contract.FriendshipService;
 import com.juangomez.feedservice.service.contract.UserReplicaService;
+import com.juangomez.feedservice.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,15 +28,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FeedServiceImpl implements FeedService {
 
-    // TODO: Replace with SecurityContextHolder.getContext().getAuthentication()
-    private final UUID userIDTEMP = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
-
     private final FeedRepository feedRepository;
     private final FeedMapper feedMapper;
     private final FriendshipService friendshipService;
     private final UserReplicaService userReplicaService;
+    private final SecurityUtils securityUtils;
 
-    // --- HELPER: Map Entity to DTO ---
+    private UUID getCurrentUserId () {
+        return securityUtils.getUserId();
+    }
+
+    // --- Map Entity to DTO ---
     private FeedResponse manageRetrievedPosts(List<FeedItem> feed) {
         var feedResponse = new FeedResponse();
 
@@ -59,11 +62,13 @@ public class FeedServiceImpl implements FeedService {
     @Override
     public FeedResponse getUserFeed() {
         // Get Context
+        var userId = getCurrentUserId();
+
         Set<UUID> socialCircle = friendshipService
-                .getSocialCircleIds(userIDTEMP);
+                .getSocialCircleIds(userId);
 
         String myUsername = userReplicaService
-                .getCurrentUsername(userIDTEMP);
+                .getCurrentUsername(userId);
 
         // Fetch Logic: (Authors in SocialCircle) OR (Tagged == myUsername)
         List<FeedItem> feed = feedRepository.getFeed(socialCircle, myUsername);
@@ -73,11 +78,13 @@ public class FeedServiceImpl implements FeedService {
 
     @Override
     public FeedResponse getPostByBody(String body) {
+        var userId = getCurrentUserId();
+
         Set<UUID> socialCircle = friendshipService
-                .getSocialCircleIds(userIDTEMP);
+                .getSocialCircleIds(userId);
 
         String myUsername = userReplicaService
-                .getCurrentUsername(userIDTEMP);
+                .getCurrentUsername(userId);
 
         // Fetch items filtering by body text
         List<FeedItem> feed = feedRepository
@@ -88,11 +95,13 @@ public class FeedServiceImpl implements FeedService {
 
     @Override
     public FeedResponse getPostByTags(Set<String> tags) {
+        var userId = getCurrentUserId();
+
         Set<UUID> socialCircle = friendshipService
-                .getSocialCircleIds(userIDTEMP);
+                .getSocialCircleIds(userId);
 
         String myUsername = userReplicaService
-                .getCurrentUsername(userIDTEMP);
+                .getCurrentUsername(userId);
 
         // Fetch items filtering by specific tags
         List<FeedItem> feed = feedRepository
@@ -103,13 +112,15 @@ public class FeedServiceImpl implements FeedService {
 
     @Override
     public FeedResponse getPostByFriend(String friendUsername) {
+        var userId = getCurrentUserId();
+
         // Find Friend ID locally
         UserReplica friend = userReplicaService
                 .findByUsername(friendUsername);
 
         // Validate Friendship (Security)
         boolean areFriends = friendshipService
-                .isFriend(userIDTEMP, friend.getId());
+                .isFriend(userId, friend.getId());
 
         if (!areFriends) {
             throw new ResponseStatusException(

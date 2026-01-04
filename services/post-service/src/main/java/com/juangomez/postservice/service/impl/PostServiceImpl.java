@@ -12,6 +12,7 @@ import com.juangomez.postservice.model.enums.PostStatus;
 import com.juangomez.postservice.repository.PostRepository;
 import com.juangomez.postservice.mapper.PostMapper; // Assumed
 import com.juangomez.postservice.service.contract.PostService;
+import com.juangomez.postservice.util.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,14 +31,17 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final PostMapper postMapper;
-    // TODO: REMOVE WHEN USING AUTH
-    private final UUID userIDtemporalTEST = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
     private final MessageSender messageSender;
+    private final SecurityUtils securityUtils;
+
+    private UUID getCurrentUserId () {
+        return securityUtils.getUserId();
+    }
 
     @Override
     public CreatePostResponse createPendingPost(CreatePostRequest request) {
         var post = Post.builder()
-                .userId(userIDtemporalTEST)
+                .userId(getCurrentUserId())
                 .content(request.getBody())
                 .build();
 
@@ -75,7 +79,7 @@ public class PostServiceImpl implements PostService {
             return;
         }
 
-        if (!post.getUserId().equals(userIDtemporalTEST)) {
+        if (!post.getUserId().equals(getCurrentUserId())) {
             throw new SecurityException("User is not the owner of the post");
         }
 
