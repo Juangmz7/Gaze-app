@@ -9,6 +9,7 @@ import com.juangomez.postservice.repository.CommentRepository;
 import com.juangomez.postservice.repository.PostRepository;
 import com.juangomez.postservice.mapper.CommentMapper;
 import com.juangomez.postservice.service.contract.CommentService;
+import com.juangomez.postservice.util.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +26,13 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-    // TODO: REMOVE WHEN USING AUTH
-    private final UUID userIDtemporalTEST = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
     private final CommentMapper commentMapper;
     private final MessageSender messageSender;
+    private final SecurityUtils securityUtils;
+
+    public UUID getCurrentUserId () {
+        return securityUtils.getUserId();
+    }
 
     @Override
     public CommentPostResponse addComment(UUID postId, CommentPostRequest request) {
@@ -40,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
         // Assuming request contains the userId or it is extracted from context
         Comment comment = Comment.builder()
                 .post(post)
-                .userId(userIDtemporalTEST)
+                .userId(getCurrentUserId())
                 .content(request.getContent())
                 .build();
 
@@ -64,8 +68,8 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
 
         // If user is not either the post-creator or the comment sender
-        if (!comment.getPost().getUserId().equals(userIDtemporalTEST)
-            && !comment.getUserId().equals(userIDtemporalTEST)
+        if (!comment.getPost().getUserId().equals(getCurrentUserId())
+            && !comment.getUserId().equals(getCurrentUserId())
         ) {
             throw new IllegalArgumentException("No permission for deleting this comment");
         }

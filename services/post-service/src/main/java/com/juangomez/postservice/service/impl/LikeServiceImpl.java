@@ -8,6 +8,7 @@ import com.juangomez.postservice.model.enums.LikeStatus;
 import com.juangomez.postservice.repository.LikeRepository;
 import com.juangomez.postservice.repository.PostRepository;
 import com.juangomez.postservice.service.contract.LikeService;
+import com.juangomez.postservice.util.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +26,13 @@ public class LikeServiceImpl implements LikeService {
 
     private final LikeRepository likeRepository;
     private final PostRepository postRepository;
-    // TODO: REMOVE WHEN USING AUTH
-    private final UUID userIDtemporalTEST = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
     private final MessageSender messageSender;
     private final LikeMapper likeMapper;
+    private final SecurityUtils securityUtils;
+
+    public UUID getCurrentUserId () {
+        return securityUtils.getUserId();
+    }
 
     @Override
     public void likePost(UUID postId) {
@@ -38,7 +42,7 @@ public class LikeServiceImpl implements LikeService {
 
         Optional<Like> existingLike = likeRepository
                 .findByPost_IdAndUserId(
-                        postId, userIDtemporalTEST
+                        postId, getCurrentUserId()
                 );
 
         if (existingLike.isPresent()) {
@@ -62,7 +66,7 @@ public class LikeServiceImpl implements LikeService {
 
         Like newLike = Like.builder()
                 .post(post)
-                .userId(userIDtemporalTEST)
+                .userId(getCurrentUserId())
                 .build();
 
         likeRepository.save(newLike);
@@ -80,7 +84,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public void unlikePost(UUID postId) {
         Like like = likeRepository
-                .findByPost_IdAndUserId(postId, userIDtemporalTEST)
+                .findByPost_IdAndUserId(postId, getCurrentUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Like not found"));
 
         if (like.getStatus() == LikeStatus.ACTIVE) {
