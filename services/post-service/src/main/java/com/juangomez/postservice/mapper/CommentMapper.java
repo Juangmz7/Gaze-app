@@ -19,8 +19,8 @@ public interface CommentMapper {
     @Mapping(source = "post.id", target = "postId")
     @Mapping(target = "messageId", expression = "java(UUID.randomUUID())")
     @Mapping(source = "createdAt", target = "occurredAt")
-    @Mapping(source = "comment.post.userId", target = "postOwnerId")
-    @Mapping(source = "comment.userId", target = "userSenderId")
+    @Mapping(source = "post.userId", target = "postOwnerId")
+    @Mapping(source = "userId", target = "userSenderId")
     PostCommentSentEvent toCreatedEvent(Comment comment);
 
     @Mapping(source = "post.id", target = "postId")
