@@ -3,7 +3,6 @@ package com.juangomez.postservice.messaging.listener;
 import com.juangomez.events.user.InvalidUserEvent;
 import com.juangomez.events.user.ValidUserEvent;
 import com.juangomez.postservice.service.contract.PostService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -23,13 +22,16 @@ public class MessageListener {
     public void onValidUser(ValidUserEvent event) {
         log.info("Valid users received for post {}", event.postId());
         postService
-                .confirmPost(event.postId(), event.users());
+                .confirmPostEventHandler(event.postId(), event.users());
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.user.invalid}")
+    @RabbitListener(
+            queues = "${rabbitmq.queue.user.invalid}",
+            errorHandler = "validationErrorHandler"
+    )
     public void onInvalidUser(InvalidUserEvent event) {
         log.info("InvalidUserEvent received for post {}", event.actionId());
-        postService.deletePost(event.actionId());
+        postService.deletePostEventHandler(event.actionId());
     }
 
 }
