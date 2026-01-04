@@ -48,10 +48,10 @@ public class PostServiceImpl implements PostService {
         var savedPost = postRepository.saveAndFlush(post);
         log.info("Pending post created with ID: {}", savedPost.getId());
 
-        // Validate users
+        // Validate notFoundUsers by usernames
         messageSender
                 .sendValidateUserBatchCommand(
-                        new ValidateUserBatchCommand(
+                         ValidateUserBatchCommand.byUsernames(
                                 post.getId(), request.getTags()
                         )
                 );
@@ -112,6 +112,6 @@ public class PostServiceImpl implements PostService {
         messageSender.sendPostCreatedEvent(
                 postMapper.toCreatedEvent(post, users)
         );
-        log.info("Post {} confirmed and tags created for {} users", postId, users != null ? users.size() : 0);
+        log.info("Post {} confirmed and tags created for {} notFoundUsers", postId, users != null ? users.size() : 0);
     }
 }

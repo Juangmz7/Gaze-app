@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Entity
-@Table(name = "users") // "user" is a reserved keyword in SQL (Postgres/H2)
+@Table(name = "notFoundUsers") // "user" is a reserved keyword in SQL (Postgres/H2)
 @Getter
 @NoArgsConstructor // Required by JPA
 public class User {

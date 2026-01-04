@@ -1,5 +1,7 @@
 package com.juangomez.userservice.service.impl;
 
+import com.juangomez.commands.user.ValidateSingleUserCommand;
+import com.juangomez.commands.user.ValidateUserBatchCommand;
 import com.juangomez.dto.UserContactInfo;
 import com.juangomez.events.user.InvalidUserEvent;
 import com.juangomez.events.user.UserRegisteredEvent;
@@ -31,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -111,44 +115,91 @@ public class UserServiceImpl implements UserService {
                 .toResponse(savedUser);
     }
 
+    // ------ LISTENERS --------
+
     @Override
+    public void validateUserBatchEventHandler(ValidateUserBatchCommand command) {
+        if (command.usernames() == null) {
+            validateUsersByIds(command.userIds(), command.postId());
+            return;
+        }
+        validateUsersByUsername(command.usernames(), command.postId());
+    }
+
+    @Override
+    public void validateSingleUserEventHandler(ValidateSingleUserCommand command) {
+        if (command.username() == null) {
+            validateUsersByIds(Set.of(command.userId()), command.actionId());
+            return;
+        }
+        validateUsersByUsername(Set.of(command.username()), command.actionId());
+    }
+
     @Transactional(readOnly = true)
-    public void validateUser(Set<String> usernames, UUID postId) {
-        List<User> foundUsers = userRepository
-                .findAllByUsernameInAndStatus(usernames, UserAccountStatus.ACTIVE);
+    public void validateUsersByUsername(Set<String> usernames, UUID postId) {
+        processValidation(
+                usernames,
+                postId,
+                // Search strategy
+                keys -> userRepository.findAllByUsernameInAndStatus(keys, UserAccountStatus.ACTIVE),
+                // Key extractor
+                User::getUsername,
+                // Error event factory
+                InvalidUserEvent::byUsernames
+        );
+    }
 
-        if (foundUsers.size() != usernames.size()) {
-            Set<String> foundNames = foundUsers.stream()
-                    .map(User::getUsername)
+    @Transactional(readOnly = true)
+    public void validateUsersByIds(Set<UUID> ids, UUID postId) {
+        processValidation(
+                ids,
+                postId,
+                // Search strategy (convert Set to List for JPA)
+                keys -> userRepository.findAllById(keys.stream().toList(), UserAccountStatus.ACTIVE),
+                // Key extractor
+                User::getId,
+                // Error event factory
+                InvalidUserEvent::byIds
+        );
+    }
+
+
+    private <T> void processValidation(
+            Set<T> inputKeys,
+            UUID postId,
+            Function<Set<T>, List<User>> repositoryFetcher,
+            Function<User, T> keyExtractor,
+            BiFunction<UUID, Set<T>, InvalidUserEvent> invalidEventFactory
+    ) {
+        // Execute search strategy
+        List<User> foundUsers = repositoryFetcher.apply(inputKeys);
+
+        // Check for missing entities
+        if (foundUsers.size() != inputKeys.size()) {
+            Set<T> foundKeys = foundUsers.stream()
+                    .map(keyExtractor)
                     .collect(Collectors.toSet());
 
-            // Calculate the difference: input set minus found set
-            Set<String> invalidUsernames = usernames.stream()
-                    .filter(name -> !foundNames.contains(name))
+            Set<T> missingKeys = inputKeys.stream()
+                    .filter(key -> !foundKeys.contains(key))
                     .collect(Collectors.toSet());
 
-            log.warn("Validation failed. Missing users: {}", invalidUsernames);
-            messageSender
-                    .sendInvalidUserEvent(
-                            new InvalidUserEvent(postId, invalidUsernames)
-                    );
+            log.warn("Validation failed. Missing keys: {}", missingKeys);
+
+            // Create and send error event
+            messageSender.sendInvalidUserEvent(
+                    invalidEventFactory.apply(postId, missingKeys)
+            );
             return;
         }
 
-        // Map found users to their UUIDs for the valid event
+        // Map and send valid event
         Map<UUID, UserContactInfo> validUsersMap = foundUsers.stream()
-                .collect(
-                        Collectors.toMap(
-                                User::getId,
-                                user -> new UserContactInfo(
-                                        user.getUsername(), user.getEmail()
-                                )
-                        )
-                );
+                .collect(Collectors.toMap(
+                        User::getId,
+                        user -> new UserContactInfo(user.getUsername(), user.getEmail())
+                ));
 
-        messageSender
-                .sendValidUserEvent(
-                        new ValidUserEvent(postId, validUsersMap)
-                );
+        messageSender.sendValidUserEvent(new ValidUserEvent(postId, validUsersMap));
     }
 }

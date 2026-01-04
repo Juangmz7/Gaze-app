@@ -10,9 +10,14 @@ public record ValidateUserBatchCommand(
         UUID messageId,
         UUID postId,
         Set<String> usernames,
+        Set<UUID> userIds,
         Instant occurredAt
 ) implements DomainMessage {
-    public ValidateUserBatchCommand(UUID postId, Set<String> usernames) {
-        this(UUID.randomUUID(), postId, usernames, Instant.now());
+    public static ValidateUserBatchCommand byUserIds(UUID postId, Set<UUID> userIds) {
+        return new ValidateUserBatchCommand(UUID.randomUUID(), postId, null, userIds, Instant.now());
+    }
+
+    public static ValidateUserBatchCommand byUsernames(UUID postId, Set<String> usernames) {
+        return new ValidateUserBatchCommand(UUID.randomUUID(), postId, usernames, null, Instant.now());
     }
 }

@@ -9,9 +9,14 @@ public record ValidateSingleUserCommand(
         UUID messageId,
         UUID actionId,
         String username,
+        UUID userId,
         Instant occurredAt
 ) implements DomainMessage {
-    public ValidateSingleUserCommand(UUID actionId, String username) {
-        this(UUID.randomUUID(), actionId, username, Instant.now());
+    public static ValidateSingleUserCommand byUserId(UUID postId, UUID userId) {
+        return new ValidateSingleUserCommand(UUID.randomUUID(), postId, null, userId, Instant.now());
+    }
+
+    public static ValidateSingleUserCommand byUsername(UUID postId, String username) {
+        return new ValidateSingleUserCommand(UUID.randomUUID(), postId, username, null, Instant.now());
     }
 }

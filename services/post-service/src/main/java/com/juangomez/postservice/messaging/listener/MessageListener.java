@@ -20,7 +20,7 @@ public class MessageListener {
             errorHandler = "validationErrorHandler"
     )
     public void onValidUser(ValidUserEvent event) {
-        log.info("Valid users received for post {}", event.postId());
+        log.info("Valid notFoundUsers received for post {}", event.postId());
         postService
                 .confirmPostEventHandler(event.postId(), event.users());
     }

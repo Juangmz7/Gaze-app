@@ -133,11 +133,11 @@ public class SocialServiceImpl implements SocialService {
                 )
         );
 
-        // TODO: Set for this a new command for id
+        // Send receiver user for being validated by id
         messageSender.sendValidateSingleUserCommand(
-                new ValidateSingleUserCommand(
+                 ValidateSingleUserCommand.byUserId(
                         savedFriendship.getId(),
-                        "pedro" // TODO: Fetch real username
+                        savedFriendship.getReceiverId()
                 )
         );
 

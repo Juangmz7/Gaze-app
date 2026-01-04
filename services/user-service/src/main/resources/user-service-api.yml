@@ -226,4 +226,4 @@ components:
         path:
           type: string
           description: "The URI path where the error occurred"
-          example: "/api/v1/users/123"
+          example: "/api/v1/notFoundUsers/123"

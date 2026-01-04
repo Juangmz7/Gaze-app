@@ -41,4 +41,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findAllByUsernameInAndStatus(Collection<String> usernames, UserAccountStatus status);
 
     Optional<User> findByUsernameAndStatus(String username, UserAccountStatus status);
+
 }
