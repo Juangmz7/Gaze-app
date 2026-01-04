@@ -25,6 +25,18 @@ public class RabbitMqConfig {
 
     @Bean
     public Declarables notificationSchema() {
+        Queue userRegisteredQueue = QueueBuilder
+                .durable(rabbitMqConstants.getQueueUserRegistered())
+                .withArgument(
+                        "x-dead-letter-exchange",
+                        rabbitMqConstants.getExchangeUserEvents() + ".dlx"
+                )
+                .withArgument(
+                        "x-dead-letter-routing-key",
+                        rabbitMqConstants.getRkUserRegistered() + ".fall-back"
+                )
+                .build();
+
         Queue tagCreatedQueue = QueueBuilder
                 .durable(rabbitMqConstants.getQueueTagCreated())
                 .withArgument(
@@ -65,11 +77,17 @@ public class RabbitMqConfig {
                 rabbitMqConstants.getExchangePostEvents()
         );
 
+        var userEventsExchange = new TopicExchange(
+                rabbitMqConstants.getExchangeUserEvents()
+        );
+
         return new Declarables(
                 postEventsExchange,
                 commentCreatedQueue,
+                userEventsExchange,
                 postLikedQueue,
                 tagCreatedQueue,
+                userRegisteredQueue,
                 BindingBuilder
                         .bind(tagCreatedQueue).
                         to(postEventsExchange)
@@ -81,7 +99,11 @@ public class RabbitMqConfig {
                 BindingBuilder
                         .bind(commentCreatedQueue).
                         to(postEventsExchange)
-                        .with(rabbitMqConstants.getRkCommentCreated())
+                        .with(rabbitMqConstants.getRkCommentCreated()),
+                BindingBuilder
+                        .bind(userRegisteredQueue).
+                        to(userEventsExchange)
+                        .with(rabbitMqConstants.getRkUserRegistered())
         );
     }
 

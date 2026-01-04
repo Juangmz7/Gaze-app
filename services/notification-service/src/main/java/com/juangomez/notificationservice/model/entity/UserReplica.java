@@ -1,4 +1,4 @@
-package com.juangomez.feedservice.model.entity;
+package com.juangomez.notificationservice.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

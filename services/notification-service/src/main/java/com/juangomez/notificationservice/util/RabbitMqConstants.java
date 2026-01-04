@@ -18,12 +18,18 @@ public class RabbitMqConstants {
     @Value("${rabbitmq.queue.comment.created}")
     private String queueCommentCreated;
 
+    @Value("${rabbitmq.queue.user.registered}")
+    private String queueUserRegistered;
+
     // --- Exchanges ---
     @Value("${rabbitmq.exchange.post.events}")
     private String exchangePostEvents;
 
     @Value("${rabbitmq.exchange.notification.events}")
     private String exchangeNotificationEvents;
+
+    @Value("${rabbitmq.exchange.user.events}")
+    private String exchangeUserEvents;
 
     // --- Routing Keys ---
     @Value("${rabbitmq.rk.tag.created}")
@@ -37,4 +43,7 @@ public class RabbitMqConstants {
 
     @Value("${rabbitmq.rk.notification.sent}")
     private String rkNotificationSent;
+
+    @Value("${rabbitmq.rk.user.registered}")
+    private String rkUserRegistered;
 }

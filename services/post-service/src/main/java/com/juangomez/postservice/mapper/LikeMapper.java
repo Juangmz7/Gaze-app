@@ -12,6 +12,8 @@ import java.util.UUID;
 @Mapper(componentModel = "spring", imports = {UUID.class, Instant.class})
 public interface LikeMapper {
 
+    @Mapping(source = "post.content", target = "postName")
+    @Mapping(source = "post.userId", target = "postOwnerId")
     @Mapping(source = "post.id", target = "postId")
     @Mapping(target = "messageId", expression = "java(UUID.randomUUID())")
     @Mapping(source = "createdAt", target = "occurredAt")

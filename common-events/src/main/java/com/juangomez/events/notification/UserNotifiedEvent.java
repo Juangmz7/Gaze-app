@@ -7,9 +7,11 @@ import java.util.UUID;
 
 public record UserNotifiedEvent (
         UUID messageId,
+        String userEmail,
+        String reason,
         Instant occurredAt
 ) implements DomainMessage {
-    public UserNotifiedEvent() {
-        this(UUID.randomUUID(), Instant.now());
+    public UserNotifiedEvent(String userEmail, String reason) {
+        this(UUID.randomUUID(), userEmail, reason, Instant.now());
     }
 }

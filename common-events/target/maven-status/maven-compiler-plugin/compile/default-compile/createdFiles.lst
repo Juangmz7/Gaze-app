@@ -4,6 +4,7 @@ com\juangomez\events\notification\UserNotifiedEvent.class
 com\juangomez\events\post\PostLikedEvent.class
 com\juangomez\events\social\FriendshipCancelledEvent.class
 com\juangomez\events\post\PostCancelledEvent.class
+com\juangomez\events\post\UserTaggedEvent.class
 com\juangomez\events\social\FriendshipAcceptedEvent.class
 com\juangomez\events\post\PostCommentDeletedEvent.class
 com\juangomez\events\social\PendingFriendshipCreatedEvent.class

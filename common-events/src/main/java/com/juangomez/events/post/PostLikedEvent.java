@@ -9,10 +9,12 @@ public record PostLikedEvent (
         UUID messageId,
         UUID id,
         UUID postId,
+        UUID postOwnerId,
+        String postName,
         UUID userId,
         Instant occurredAt
 ) implements DomainMessage {
-    public PostLikedEvent(UUID id, UUID postId, UUID userId) {
-        this(UUID.randomUUID(), id, postId, userId, Instant.now());
+    public PostLikedEvent(UUID id, UUID postId, String postName, UUID userId, UUID postOwnerId) {
+        this(UUID.randomUUID(), id, postId, postOwnerId, postName, userId, Instant.now());
     }
 }
