@@ -17,8 +17,8 @@ import java.util.UUID;
 @Mapper(componentModel = "spring", imports = {UUID.class, Instant.class})
 public interface PostMapper {
 
-    @Mapping(source = "resolvedTags", target = "tags")
-    CreatePostResponse toResponse(Post post, Set<String> resolvedTags);
+    @Mapping(source = "post.id", target = "postId")
+    CreatePostResponse toResponse(Post post);
 
     @Mapping(target = "messageId", expression = "java(UUID.randomUUID())")
     @Mapping(source = "post.id", target = "postId")
