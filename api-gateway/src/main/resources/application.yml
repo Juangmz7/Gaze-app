@@ -1,3 +1,27 @@
+x-config:
+  rate-limits:
+    command: &commandRateLimit
+      # Requests per second
+      redis-rate-limiter.replenishRate: 2
+
+      # Peek number of requests
+      redis-rate-limiter.burstCapacity: 5
+      redis-rate-limiter.requestedTokens: 1
+
+      # Name of the bean from RateLimitConfig
+      key-resolver: "#{@userKeyResolver}"
+
+    query: &queryRateLimit
+      # Requests per second
+      redis-rate-limiter.replenishRate: 10
+
+      # Peek number of requests
+      redis-rate-limiter.burstCapacity: 20
+      redis-rate-limiter.requestedTokens: 1
+
+      # Name of the bean from RateLimitConfig
+      key-resolver: "#{@userKeyResolver}"
+
 server:
   port: 8090
 spring:
@@ -22,12 +46,14 @@ spring:
               args:
                 name: commandResilienceConfig
                 fallbackUri: forward:/fallback/command-unavailable
+            - name: RequestRateLimiter
+              args: *commandRateLimit
 
         # SOCIAL-SERVICE commands
         - id: social-command-route
           uri: lb://social-service
           predicates:
-            - Path=/api/v1/social/friend-request/**,
+            - Path=/api/v1/social/friend-request/**
             - Method=POST
           filters:
             - TokenRelay  # For adding the jwt to the request
@@ -35,6 +61,8 @@ spring:
               args:
                 name: commandResilienceConfig
                 fallbackUri: forward:/fallback/command-unavailable
+            - name: RequestRateLimiter
+              args: *commandRateLimit
 
           # SOCIAL-SERVICE queries
         - id: social-queries-route
@@ -48,6 +76,8 @@ spring:
               args:
                 name: queryResilienceConfig
                 fallbackUri: forward:/fallback/query-unavailable
+            - name: RequestRateLimiter
+              args: *queryRateLimit
 
           # FEED-SERVICE (CQRS)
         - id: feed-queries-route
@@ -61,6 +91,8 @@ spring:
               args:
                 name: queryResilienceConfig
                 fallbackUri: forward:/fallback/query-unavailable
+            - name: RequestRateLimiter
+              args: *queryRateLimit
 
         # POST-SERVICE commands
         - id: post-command-route
@@ -74,6 +106,8 @@ spring:
               args:
                 name: commandResilienceConfig
                 fallbackUri: forward:/fallback/command-unavailable
+            - name: RequestRateLimiter
+              args: *commandRateLimit
 
 # ---------------------------------------------------------
 # Resilience config
