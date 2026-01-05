@@ -3,18 +3,30 @@ package com.juangomez.events.post;
 import com.juangomez.DomainMessage;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
 public record UserTaggedEvent (
         UUID messageId,
-        UUID id,
         UUID postId,
-        String content,
-        Set<UUID> taggedUsersId,
+        UUID taggerId,
+        Map<UUID, UUID> taggedUsers,  // <tagId, taggedUserId>
+        String postContent,
         Instant occurredAt
 ) implements DomainMessage {
-    public UserTaggedEvent(UUID id, UUID postId, String postContent, Set<UUID> userId) {
-        this(UUID.randomUUID(), id, postId, postContent, userId, Instant.now());
+    public UserTaggedEvent(
+            UUID postId,
+            String postContent,
+            Map<UUID, UUID> taggedUsers,
+            UUID taggerId
+    ) {
+        this(
+                UUID.randomUUID(),
+                postId,
+                taggerId,
+                taggedUsers,
+                postContent,
+                Instant.now()
+        );
     }
 }

@@ -3,6 +3,7 @@ package com.juangomez.postservice.service.impl;
 import com.juangomez.commands.user.ValidateUserBatchCommand;
 import com.juangomez.dto.UserContactInfo;
 import com.juangomez.events.post.PostCancelledEvent;
+import com.juangomez.events.post.UserTaggedEvent;
 import com.juangomez.postservice.messaging.sender.MessageSender;
 import com.juangomez.postservice.model.dto.CreatePostRequest;
 import com.juangomez.postservice.model.dto.CreatePostResponse;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -47,7 +49,7 @@ public class PostServiceImpl implements PostService {
         var savedPost = postRepository.saveAndFlush(post);
         log.info("Pending post created with ID: {}", savedPost.getId());
 
-        // Validate notFoundUsers by usernames
+        // Validate users by usernames
         messageSender
                 .sendValidateUserBatchCommand(
                          ValidateUserBatchCommand.byUsernames(
@@ -120,11 +122,32 @@ public class PostServiceImpl implements PostService {
 
         }
 
+        // Commit the update for receive the id and tag date
+        var savedPost = postRepository.save(post);
+        // Cast into a map of <Tag id, tagged user id>
+        Map<UUID, UUID> tagsMap = savedPost.getTags().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        PostTag::getId,
+                                        PostTag::getTaggedUserId
+                                )
+                        );
+
         post.updateStatus(PostStatus.POSTED);
         postRepository.save(post);
 
         messageSender.sendPostCreatedEvent(
                 postMapper.toCreatedEvent(post, users)
+        );
+
+        // Notify with tags created event
+        messageSender.sendUserTaggedEvent(
+                new UserTaggedEvent(
+                        postId,
+                        post.getContent(),
+                        tagsMap,
+                        post.getUserId()
+                )
         );
         log.info("Post {} confirmed and tags created for {} users", postId, users != null ? users.size() : 0);
     }

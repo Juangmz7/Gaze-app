@@ -77,7 +77,7 @@ public class MessageListener {
         }
 
         try {
-            // content preview
+            // postContent preview
             String preview = event.content().length() > 50
                     ? event.content().substring(0, 50) + "..."
                     : event.content();
@@ -101,20 +101,18 @@ public class MessageListener {
     public void onUserTagged(UserTaggedEvent event) {
         logReceivedEvent("PostUserTaggedEvent");
 
-        if (event.taggedUsersId() == null || event.postId() == null) {
+        if (event.taggedUsers() == null || event.postId() == null) {
             log.warn("Invalid PostUserTaggedEvent: missing IDs. Discarding.");
             return;
         }
 
         try {
-            event.taggedUsersId()
-                    .forEach(id -> {
-                        sendNotification(
-                                id,
-                                event.content(),
-                                NotificationReason.TAG
-                        );
-                    });
+            event.taggedUsers()
+                    .forEach((key, value) -> sendNotification(
+                            value,
+                            event.postContent(),
+                            NotificationReason.TAG
+                    ));
 
         } catch (Exception e) {
             log.error("Failed to process PostUserTaggedEvent for post {}", event.postId(), e);
