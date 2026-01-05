@@ -39,8 +39,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.post.liked}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.post.liked}"
     )
     public void onPostLiked(PostLikedEvent event) {
         logReceivedEvent("PostLikedEvent");
@@ -65,8 +64,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.comment.created}", // Changed queue name
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.comment.created}" // Changed queue name
     )
     public void onCommentSent(PostCommentSentEvent event) {
         logReceivedEvent("PostCommentSentEvent");
@@ -95,8 +93,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.tag.created}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.tag.created}"
     )
     public void onUserTagged(UserTaggedEvent event) {
         logReceivedEvent("PostUserTaggedEvent");

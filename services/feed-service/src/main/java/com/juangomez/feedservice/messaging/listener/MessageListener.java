@@ -25,8 +25,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.post.created}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.post.created}"
     )
     public void onPostCreated(PostCreatedEvent event) {
         logReceivedEvent("PostCreatedEvent");
@@ -34,8 +33,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.post.cancelled}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.post.cancelled}"
     )
     public void onPostCancelled(PostCancelledEvent event) {
         logReceivedEvent("PostCancelledEvent");
@@ -43,8 +41,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.post.liked}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.post.liked}"
     )
     public void onPostLiked(PostLikedEvent event) {
         logReceivedEvent("PostLikedEvent");
@@ -52,8 +49,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.post.unliked}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.post.unliked}"
     )
     public void onLikeDeleted(PostUnlikedEvent event) {
         logReceivedEvent("PostUnlikedEvent");
@@ -61,8 +57,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.comment.created}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.comment.created}"
     )
     public void onPostCommentSent(PostCommentSentEvent event) {
         logReceivedEvent("PostCommentSentEvent");
@@ -70,8 +65,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.comment.deleted}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.comment.deleted}"
     )
     public void onPostCommentDeleted(PostCommentDeletedEvent event) {
         logReceivedEvent("PostCommentDeletedEvent");
@@ -79,8 +73,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.friendship.accepted}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.friendship.accepted}"
     )
     public void onFriendshipAccepted(FriendshipAcceptedEvent event) {
         logReceivedEvent("FriendshipAcceptedEvent");
@@ -88,8 +81,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.user.registered}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.user.registered}"
     )
     public void onUserRegistered(UserRegisteredEvent event) {
         logReceivedEvent("UserRegisteredEvent");

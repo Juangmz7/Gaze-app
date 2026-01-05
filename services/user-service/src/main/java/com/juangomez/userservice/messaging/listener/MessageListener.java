@@ -19,8 +19,7 @@ public class MessageListener {
     private final UserService userService;
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.user.validate.single}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.user.validate.single}"
     )
     public void onValidateSingleUser(ValidateSingleUserCommand command) {
         userService
@@ -28,8 +27,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.user.validate.batch}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.user.validate.batch}"
     )
     public void onValidateUserBatch(ValidateUserBatchCommand command) {
         userService

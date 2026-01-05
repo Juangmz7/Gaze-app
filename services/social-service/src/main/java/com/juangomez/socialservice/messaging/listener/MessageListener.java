@@ -19,8 +19,7 @@ public class MessageListener {
     }
 
     @RabbitListener(
-            queues = "${rabbitmq.queue.user.invalid}",
-            errorHandler = "validationErrorHandler"
+            queues = "${rabbitmq.queue.user.invalid}"
     )
     public void onInvalidUser(InvalidUserEvent event) {
         logReceivedEvent("InvalidUserEvent");
