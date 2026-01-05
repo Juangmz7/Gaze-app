@@ -52,4 +52,7 @@ public class RabbitMqConstants {
 
     @Value("${rabbitmq.rk.user.validate.batch}")
     private String rkUserValidateBatch;
+
+    @Value("${rabbitmq.rk.tag.created}")
+    private String rkTagCreated;
 }

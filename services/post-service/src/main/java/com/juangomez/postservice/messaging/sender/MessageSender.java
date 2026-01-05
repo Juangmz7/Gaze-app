@@ -74,6 +74,14 @@ public class MessageSender {
         );
     }
 
+    public void sendUserTaggedEvent (UserTaggedEvent event) {
+        publish(
+                rabbitMqConstants.getRkTagCreated(),
+                rabbitMqConstants.getExchangePostEvents(),
+                event
+        );
+    }
+
     public void sendValidateUserBatchCommand (ValidateUserBatchCommand command) {
         publish(
                 rabbitMqConstants.getRkUserValidateBatch(),
@@ -81,5 +89,6 @@ public class MessageSender {
                 command
         );
     }
+
 
 }
