@@ -13,7 +13,7 @@ public interface CommentService {
      * Adds a comment to a specific post.
      *
      * @param postId   The UUID of the post.
-     * @param request  The comment content.
+     * @param request  The comment postContent.
      * @return The created comment details.
      */
     CommentPostResponse addComment(UUID postId, CommentPostRequest request);

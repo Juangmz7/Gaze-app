@@ -36,7 +36,7 @@ public class EmailService {
 
 
     /**
-     * Wraps plain content in a styled CampusConnect HTML template.
+     * Wraps plain postContent in a styled CampusConnect HTML template.
      */
     private String wrapInTemplate(String title, String content) {
         return """

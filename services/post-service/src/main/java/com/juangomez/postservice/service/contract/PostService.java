@@ -14,7 +14,7 @@ public interface PostService {
     /**
      * Creates a new post for the authenticated user.
      *
-     * @param request  The post content and tags.
+     * @param request  The post postContent and tags.
      * @return The created post details.
      */
     CreatePostResponse createPendingPost(CreatePostRequest request);

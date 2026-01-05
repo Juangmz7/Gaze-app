@@ -179,7 +179,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommentPostResponse'
         '400':
-          description: Invalid comment content
+          description: Invalid comment postContent
           content:
             application/json:
               schema:

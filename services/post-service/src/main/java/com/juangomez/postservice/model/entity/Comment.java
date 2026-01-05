@@ -46,7 +46,7 @@ public class Comment {
     public Comment(Post post, UUID userId, String content) {
         if (post == null) throw new IllegalArgumentException("Post cannot be null");
         if (userId == null) throw new IllegalArgumentException("User ID cannot be null");
-        if (content == null || content.isBlank()) throw new IllegalArgumentException("Comment content cannot be empty");
+        if (content == null || content.isBlank()) throw new IllegalArgumentException("Comment postContent cannot be empty");
 
         this.post = post;
         this.userId = userId;
@@ -58,7 +58,7 @@ public class Comment {
 
     public void updateContent(String newContent) {
         if (newContent == null || newContent.isBlank()) {
-            throw new IllegalArgumentException("Comment content cannot be empty");
+            throw new IllegalArgumentException("Comment postContent cannot be empty");
         }
         this.content = newContent;
     }

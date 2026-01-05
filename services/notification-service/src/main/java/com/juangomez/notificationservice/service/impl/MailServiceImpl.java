@@ -26,12 +26,12 @@ public class MailServiceImpl implements MailService {
             return;
         }
         if (content == null || content.trim().isEmpty()) {
-            log.warn("Mail's content is null, aborting notification");
+            log.warn("Mail's postContent is null, aborting notification");
             return;
         }
 
         // Send notification
-        //mailSender.sendEmail(receiver, reason.name() + " received", content);
+        //mailSender.sendEmail(receiver, reason.name() + " received", postContent);
 
         log.info("User with email {} was notified for {}", receiver, reason);
         messageSender.sendUserNotifiedEvent(

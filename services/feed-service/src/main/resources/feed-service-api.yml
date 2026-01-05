@@ -111,7 +111,7 @@ paths:
     get:
       tags:
         - Feed
-      description: Search feed posts by content body text
+      description: Search feed posts by postContent body text
       operationId: searchPostsByBody
       parameters:
         - name: criteria
