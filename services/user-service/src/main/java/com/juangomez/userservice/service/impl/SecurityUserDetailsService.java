@@ -2,7 +2,6 @@
 package com.juangomez.userservice.service.impl;
 
 import com.juangomez.userservice.model.entity.User;
-import com.juangomez.userservice.model.enums.UserAccountStatus;
 import com.juangomez.userservice.repository.UserRepository;
 import com.juangomez.userservice.util.SecurityUser;
 import jakarta.persistence.EntityNotFoundException;
