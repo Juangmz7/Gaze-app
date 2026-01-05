@@ -102,24 +102,15 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new EntityNotFoundException("Post not found: " + postId));
 
         if (users != null && !users.isEmpty()) {
+            users.keySet().forEach(taggedUserId -> {
+                PostTag tag = PostTag.builder()
+                        .post(post)
+                        .taggerUserId(post.getUserId()) // The post owner is the tagger
+                        .taggedUserId(taggedUserId)
+                        .build();
 
-            try {
-                users.keySet().forEach(taggedUserId -> {
-                    PostTag tag = PostTag.builder()
-                            .post(post)
-                            .taggerUserId(post.getUserId()) // The post owner is the tagger
-                            .taggedUserId(taggedUserId)
-                            .build();
-
-                    post.addTag(tag);
-                });
-
-            } catch (IllegalArgumentException e) {
-                log.error("Fatal business error. Compensating post {}", postId, e);
-                cancelPostEventHandler(postId);
-                return;
-            }
-
+                post.addTag(tag);
+            });
         }
 
         // Commit the update for receive the id and tag date
