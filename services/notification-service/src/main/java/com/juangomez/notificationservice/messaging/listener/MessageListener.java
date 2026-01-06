@@ -8,12 +8,14 @@ import com.juangomez.notificationservice.model.entity.UserReplica;
 import com.juangomez.notificationservice.model.enums.NotificationReason;
 import com.juangomez.notificationservice.repository.UserReplicaRepository;
 import com.juangomez.notificationservice.service.contract.MailService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.function.BooleanSupplier;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,79 +44,49 @@ public class MessageListener {
             queues = "${rabbitmq.queue.post.liked}"
     )
     public void onPostLiked(PostLikedEvent event) {
-        logReceivedEvent("PostLikedEvent");
-
-        // Validation
-        if (event.userId() == null || event.postId() == null) {
-            log.warn("Invalid PostLikedEvent received: missing required IDs. Discarding.");
-            return;
-        }
-
-        try {
-            sendNotification(
-                    event.postOwnerId(),
-                    "Your post was liked!",
-                    NotificationReason.LIKE
-            );
-
-        } catch (Exception e) {
-            log.error("Failed to process PostLikedEvent for post {}", event.postId(), e);
-            throw e;
-        }
+        handleEventReceived(
+                "PostLikedEvent",
+                event.postId(),
+                () -> event.userId() != null && event.postId() != null,
+                () -> sendNotification(
+                        event.postOwnerId(),
+                        "Your post was liked!",
+                        NotificationReason.LIKE
+                )
+        );
     }
 
     @RabbitListener(
             queues = "${rabbitmq.queue.comment.created}" // Changed queue name
     )
     public void onCommentSent(PostCommentSentEvent event) {
-        logReceivedEvent("PostCommentSentEvent");
-
-        if (event.postId() == null || event.content() == null || event.content().isBlank()) {
-            log.warn("Invalid PostCommentSentEvent: missing data. Discarding.");
-            return;
-        }
-
-        try {
-            // postContent preview
-            String preview = event.content().length() > 50
-                    ? event.content().substring(0, 50) + "..."
-                    : event.content();
-
-            sendNotification(
-                    event.postOwnerId(),
-                    "New comment: " + event.content(),
-                    NotificationReason.COMMENT
-            );
-
-        } catch (Exception e) {
-            log.error("Failed to process PostCommentSentEvent for post {}", event.postId(), e);
-            throw e;
-        }
+        handleEventReceived(
+                "PostCommentSentEvent",
+                event.postId(),
+                () -> event.postId() != null && event.content() != null && !event.content().isBlank(),
+                () -> sendNotification(
+                        event.postOwnerId(),
+                        "New comment: " + event.content(),
+                        NotificationReason.COMMENT
+                )
+        );
     }
 
     @RabbitListener(
             queues = "${rabbitmq.queue.tag.created}"
     )
     public void onUserTagged(UserTaggedEvent event) {
-        logReceivedEvent("PostUserTaggedEvent");
-
-        if (event.taggedUsers() == null || event.postId() == null) {
-            log.warn("Invalid PostUserTaggedEvent: missing IDs. Discarding.");
-            return;
-        }
-
-        try {
-            event.taggedUsers()
-                    .forEach((key, value) -> sendNotification(
-                            value,
-                            event.postContent(),
-                            NotificationReason.TAG
-                    ));
-
-        } catch (Exception e) {
-            log.error("Failed to process PostUserTaggedEvent for post {}", event.postId(), e);
-            throw e;
-        }
+        handleEventReceived(
+                "PostUserTaggedEvent",
+                event.postId(),
+                () -> event.taggedUsers() != null && event.postId() != null,
+                () -> event.taggedUsers()
+                        .forEach((key, value) -> sendNotification(
+                                value,
+                                event.postContent(),
+                                NotificationReason.TAG
+                        ))
+        );
     }
 
     // --- Helper Methods ---
@@ -139,5 +111,30 @@ public class MessageListener {
 
     private void logReceivedEvent(String eventName) {
         log.info("Received event: {}", eventName);
+    }
+
+    private void handleEventReceived(
+            String eventName,
+            UUID eventId,
+            BooleanSupplier validationRule,
+            Runnable mainAction
+    ) {
+        logReceivedEvent(eventName);
+
+        boolean isValid = validationRule.getAsBoolean();
+        if (!isValid) {
+            log.warn("Event {} with ID {} is invalid or incomplete. Discarding message.", eventName, eventId);
+            return;
+        }
+
+        try {
+            mainAction.run();
+
+        } catch (IllegalArgumentException | EntityNotFoundException e) {
+            log.error("Failed to process event {} for ID {}: {}", eventName, eventId, e.getMessage());
+        } catch (Exception e) {
+            log.error("Failed to process event {}, retriying... for ID {}:{}", eventName, eventId, e.getMessage());
+            throw e;
+        }
     }
 }
