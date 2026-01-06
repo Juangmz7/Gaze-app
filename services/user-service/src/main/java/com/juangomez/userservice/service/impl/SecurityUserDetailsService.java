@@ -4,7 +4,6 @@ package com.juangomez.userservice.service.impl;
 import com.juangomez.userservice.model.entity.User;
 import com.juangomez.userservice.repository.UserRepository;
 import com.juangomez.userservice.util.SecurityUser;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,7 +25,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return new SecurityUser(user);
     }
