@@ -25,8 +25,8 @@ public class EmailService {
             helper.setSubject(subject);
             helper.setText(htmlBody, true);
 
-            log.info("Sending styled email to {}", sendTo);
             mailSender.send(message);
+            log.info("Sending styled email to {}", sendTo);
 
         } catch (Exception e) {
             log.error("Error sending email: {}", e.getMessage(), e);

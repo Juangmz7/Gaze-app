@@ -31,7 +31,7 @@ public class MailServiceImpl implements MailService {
         }
 
         // Send notification
-        //mailSender.sendEmail(receiver, reason.name() + " received", postContent);
+        mailSender.sendEmail(receiver, reason.name() + " received", content);
 
         log.info("User with email {} was notified for {}", receiver, reason);
         messageSender.sendUserNotifiedEvent(
