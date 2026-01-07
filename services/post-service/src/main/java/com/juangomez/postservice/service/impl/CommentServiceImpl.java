@@ -36,8 +36,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentPostResponse addComment(UUID postId, CommentPostRequest request) {
-        // TODO: Check if the user is a friend of the post's owner
-
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found"));
 

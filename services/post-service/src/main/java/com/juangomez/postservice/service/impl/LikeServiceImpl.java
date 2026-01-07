@@ -36,7 +36,6 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void likePost(UUID postId) {
-        // TODO: Check if user is friend of the one who created the post
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found"));
 
