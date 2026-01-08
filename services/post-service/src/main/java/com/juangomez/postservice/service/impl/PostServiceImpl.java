@@ -105,7 +105,6 @@ public class PostServiceImpl implements PostService {
             users.keySet().forEach(taggedUserId -> {
                 PostTag tag = PostTag.builder()
                         .post(post)
-                        .taggerUserId(post.getUserId()) // The post owner is the tagger
                         .taggedUserId(taggedUserId)
                         .build();
 

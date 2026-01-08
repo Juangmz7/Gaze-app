@@ -32,9 +32,6 @@ public class PostTag {
     @Column(name = "tagged_user_id", nullable = false)
     private UUID taggedUserId;
 
-    @Column(name = "tagger_user_id", nullable = false)
-    private UUID taggerUserId;
-
     @Enumerated(EnumType.STRING)
     private PostTagStatus status;
 
@@ -43,17 +40,15 @@ public class PostTag {
     private Instant createdAt;
 
     @Builder
-    public PostTag(Post post, UUID taggerUserId, UUID taggedUserId) {
+    public PostTag(Post post, UUID taggedUserId) {
         if (post == null) throw new IllegalArgumentException("Post cannot be null");
-        if (taggerUserId == null) throw new IllegalArgumentException("Tagger ID cannot be null");
         if (taggedUserId == null) throw new IllegalArgumentException("Tagged ID cannot be null");
 
-        if (taggerUserId.equals(taggedUserId)) {
+        if (taggedUserId.equals(post.getUserId())) {
             throw new IllegalArgumentException("You cannot tag yourself");
         }
 
         this.post = post;
-        this.taggerUserId = taggerUserId;
         this.taggedUserId = taggedUserId;
         this.status = PostTagStatus.ACTIVE;
     }
