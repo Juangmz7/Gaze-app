@@ -72,7 +72,7 @@ public class PostServiceImpl implements PostService {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found"));
 
-        var wasPostConfirmed = PostStatus.POSTED.equals(post.getStatus());
+        var wasPostConfirmed = PostStatus.PUBLISHED.equals(post.getStatus());
 
         if (post.getStatus().equals(PostStatus.CANCELLED)) {
             log.info("Post already cancelled");
@@ -124,7 +124,7 @@ public class PostServiceImpl implements PostService {
                                 )
                         );
 
-        post.updateStatus(PostStatus.POSTED);
+        post.updateStatus(PostStatus.PUBLISHED);
         postRepository.save(post);
 
         messageSender.sendPostCreatedEvent(
