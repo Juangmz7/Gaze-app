@@ -11,7 +11,7 @@ import java.util.UUID;
 @IdClass(FriendshipId.class)
 @Getter
 @NoArgsConstructor
-public class Friendship {
+public class FriendshipReplica {
 
     @Id
     @Column(name = "user1_id", nullable = false)
@@ -25,7 +25,7 @@ public class Friendship {
     private Instant createdAt;
 
     @Builder
-    public Friendship (UUID idA, UUID idB, Instant createdAt) {
+    public FriendshipReplica(UUID idA, UUID idB, Instant createdAt) {
         if (idA == null) {
             throw new IllegalArgumentException("User IdA cannot be null");
         }

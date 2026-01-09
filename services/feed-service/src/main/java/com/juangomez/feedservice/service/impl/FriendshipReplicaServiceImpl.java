@@ -1,9 +1,9 @@
 package com.juangomez.feedservice.service.impl;
 
 import com.juangomez.events.social.FriendshipAcceptedEvent;
-import com.juangomez.feedservice.model.entity.Friendship;
+import com.juangomez.feedservice.model.entity.FriendshipReplica;
 import com.juangomez.feedservice.repository.FriendshipRepository;
-import com.juangomez.feedservice.service.contract.FriendshipService;
+import com.juangomez.feedservice.service.contract.FriendshipReplicaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
-public class FriendshipServiceImpl implements FriendshipService {
+public class FriendshipReplicaServiceImpl implements FriendshipReplicaService {
 
     private final FriendshipRepository friendshipRepository;
 
@@ -37,13 +37,13 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Transactional(readOnly = true)
     public Set<UUID> getSocialCircleIds(UUID myId) {
         // Find all friendships where I am involved (either as user1 or user2)
-        Set<Friendship> friendships = friendshipRepository
+        Set<FriendshipReplica> friendships = friendshipRepository
                 .findAllByUser1IdAndUser2Id(myId, myId);
 
         Set<UUID> ids = new HashSet<>();
         ids.add(myId);
 
-        for (Friendship f : friendships) {
+        for (FriendshipReplica f : friendships) {
             // Determine which ID is the friend
             UUID friendId = f.getUser1Id().equals(myId)
                     ? f.getUser2Id()
@@ -61,7 +61,7 @@ public class FriendshipServiceImpl implements FriendshipService {
             return;
         }
 
-        Friendship friendship = Friendship.builder()
+        FriendshipReplica friendship = FriendshipReplica.builder()
                 .idA(event.idA())
                 .idB(event.idB())
                 .createdAt(event.occurredAt())

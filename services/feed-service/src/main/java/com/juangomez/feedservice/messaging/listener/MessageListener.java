@@ -4,7 +4,7 @@ import com.juangomez.events.post.*;
 import com.juangomez.events.social.*;
 import com.juangomez.events.user.UserRegisteredEvent;
 import com.juangomez.feedservice.service.contract.FeedService;
-import com.juangomez.feedservice.service.contract.FriendshipService;
+import com.juangomez.feedservice.service.contract.FriendshipReplicaService;
 import com.juangomez.feedservice.service.contract.UserReplicaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class MessageListener {
 
     private final FeedService feedService;
-    private final FriendshipService friendshipService;
+    private final FriendshipReplicaService friendshipService;
     private final UserReplicaService userReplicaService;
 
     private void logReceivedEvent(String eventName) {

@@ -9,11 +9,12 @@ import com.juangomez.feedservice.model.entity.FeedItem;
 import com.juangomez.feedservice.model.entity.UserReplica;
 import com.juangomez.feedservice.repository.FeedRepository;
 import com.juangomez.feedservice.service.contract.FeedService;
-import com.juangomez.feedservice.service.contract.FriendshipService;
+import com.juangomez.feedservice.service.contract.FriendshipReplicaService;
 import com.juangomez.feedservice.service.contract.UserReplicaService;
 import com.juangomez.feedservice.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +31,7 @@ public class FeedServiceImpl implements FeedService {
 
     private final FeedRepository feedRepository;
     private final FeedMapper feedMapper;
-    private final FriendshipService friendshipService;
+    private final FriendshipReplicaService friendshipService;
     private final UserReplicaService userReplicaService;
     private final SecurityUtils securityUtils;
 

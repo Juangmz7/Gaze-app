@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Service
-public interface FriendshipService {
+public interface FriendshipReplicaService {
 
      boolean isFriend(UUID idA, UUID idB);
 
