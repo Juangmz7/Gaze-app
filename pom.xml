@@ -7,7 +7,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version> <relativePath/>
+        <version>3.2.1</version>
+        <relativePath/>
     </parent>
 
     <groupId>com.juangomez</groupId>
@@ -17,12 +18,15 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>common-modules</module>
+        <module>common-events</module>
         <module>services/feed-service</module>
         <module>services/notification-service</module>
         <module>services/post-service</module>
         <module>services/social-service</module>
         <module>services/user-service</module>
+        <module>common-security</module>
+        <module>api-gateway</module>
+        <module>discovery-service</module>
     </modules>
 
     <properties>
@@ -30,6 +34,32 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-cloud.version>2023.0.0</spring-cloud.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

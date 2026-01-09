@@ -3,10 +3,13 @@ package com.juangomez.userservice.config;
 import com.juangomez.userservice.util.RabbitMqConstants;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
@@ -57,6 +60,23 @@ public class RabbitMqConfig {
                         to(userCommandsExchange)
                         .with(rabbitMqConstants.getRkValidateSingle())
         );
+    }
+
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
+            ConnectionFactory connectionFactory,
+            SimpleRabbitListenerContainerFactoryConfigurer configurer
+    ) {
+
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+
+        // Apply default Spring Boot config (converters, etc.)
+        configurer.configure(factory, connectionFactory);
+
+        // Without this line, retryInterceptor() bean is ignored.
+        factory.setAdviceChain(retryInterceptor());
+
+        return factory;
     }
 
 

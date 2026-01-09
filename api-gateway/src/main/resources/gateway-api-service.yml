@@ -1,0 +1,23 @@
+openapi: 3.0.3
+info:
+  title: Feed Service v1
+  description: API for Feed Management
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    # --- ERRORS ---
+    ApiErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string

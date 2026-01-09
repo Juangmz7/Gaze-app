@@ -66,9 +66,17 @@ public class MessageSender {
         );
     }
 
-    public void sendPostCommentDeletedEvent (PostLikedEvent event) {
+    public void sendPostCommentDeletedEvent (PostCommentDeletedEvent event) {
         publish(
                 rabbitMqConstants.getRkCommentDeleted(),
+                rabbitMqConstants.getExchangePostEvents(),
+                event
+        );
+    }
+
+    public void sendUserTaggedEvent (UserTaggedEvent event) {
+        publish(
+                rabbitMqConstants.getRkTagCreated(),
                 rabbitMqConstants.getExchangePostEvents(),
                 event
         );
@@ -81,5 +89,6 @@ public class MessageSender {
                 command
         );
     }
+
 
 }

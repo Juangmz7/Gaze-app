@@ -1,0 +1,3 @@
+com\juangomez\config\CustomAuthenticationEntryPoint.class
+com\juangomez\config\SecurityCommonConfig.class
+com\juangomez\dto\ApiErrorResponse.class

@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Entity
-@Table(name = "users") // "user" is a reserved keyword in SQL (Postgres/H2)
+@Table(name = "users")
 @Getter
 @NoArgsConstructor // Required by JPA
 public class User {
@@ -32,6 +32,7 @@ public class User {
     private String passwordHash;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private UserAccountStatus status;
 
     @CreationTimestamp
