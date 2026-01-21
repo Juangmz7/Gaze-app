@@ -1,0 +1,60 @@
+name: Build and Push Microservice
+
+on:
+  workflow_call:
+    inputs:
+      service_name:
+        required: true
+        type: string
+      service_path:
+        required: true
+        type: string
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      # Install shared dependencies (we skip their tests here to save time)
+      - name: Install Common Modules
+        run: |
+          mvn install -f common-events/pom.xml -DskipTests
+          mvn install -f common-security/pom.xml -DskipTests
+
+      # RUN TESTS: The pipeline will stop here if any test fails
+      - name: Run Microservice Tests
+        run: mvn test -f ${{ inputs.service_path }}/pom.xml
+
+      # Build the artifact only if tests passed
+      - name: Package Service
+        run: mvn package -f ${{ inputs.service_path }}/pom.xml -DskipTests
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./${{ inputs.service_path }}
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.service_name }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.service_name }}:${{ github.sha }}
+
