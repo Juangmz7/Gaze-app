@@ -111,6 +111,8 @@ public class UserServiceImpl implements UserService {
                 savedUser.getEmail()
         ));
 
+        System.out.println("Test pipeline");
+
         return userMapper
                 .toResponse(savedUser);
     }
