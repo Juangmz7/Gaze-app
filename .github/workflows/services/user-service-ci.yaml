@@ -1,7 +1,7 @@
 name: CI User Service
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "test" ]
     paths:
       - 'services/user-service/**' # Trigger on service changes
       - 'common-events/**'         # Trigger on shared events changes
