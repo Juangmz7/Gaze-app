@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: gaze-application-set
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        # TODO: Complete
+        elements:
+          - name: feed-service
+            path: infra/k8s/apps/feed-service
+            namespace: gaze-app
+
+          - name: post-service
+            path: infra/k8s/apps/post-service
+            namespace: gaze-app
+
+          - name: gateway-service
+            path: infra/k8s/apps/gateway-service
+            namespace: gaze-app
+
+          - name: notification-service
+            path: infra/k8s/apps/notification-service
+            namespace: gaze-app
+
+          - name: social-service
+            path: infra/k8s/apps/social-service
+            namespace: gaze-app
+
+          - name: user-service
+            path: infra/k8s/apps/user-service
+            namespace: gaze-app
+
+  template:
+    metadata:
+      name: '{{name}}'
+      namespace: argocd
+    spec:
+      project: default
+      source:
+        repoURL: 'https://github.com/Juangmz7/Gaze-app.git'
+        targetRevision: HEAD
+        path: '{{path}}'
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespace}}'
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
