@@ -30,8 +30,9 @@ jobs:
           cache: maven
 
       # Install shared dependencies (we skip their tests here to save time)
-      - name: Install Common Modules
+      - name: Install Dependencies
         run: |
+          mvn install -N -f pom.xml
           mvn install -f common-events/pom.xml -DskipTests
           mvn install -f common-security/pom.xml -DskipTests
 
