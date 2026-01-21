@@ -3,9 +3,9 @@ on:
   push:
     branches: [ "test" ]
     paths:
-      - '../../services/user-service' # Trigger on service changes
-      - '../../common-events'         # Trigger on shared events changes
-      - '../../common-security'       # Trigger on shared security changes
+      - 'services/user-service/**' # Trigger on service changes
+      - 'common-events/**'         # Trigger on shared events changes
+      - 'common-security/**'       # Trigger on shared security changes
 
 jobs:
   call-template:
