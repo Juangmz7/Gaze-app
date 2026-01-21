@@ -3,7 +3,7 @@ on:
   push:
     branches: [ "main", "test" ]
     paths:
-      - 'services/feed-service/**' # Trigger on service changes
+      - 'services/social-service/**' # Trigger on service changes
       - 'common-events/**'         # Trigger on shared events changes
       - 'common-security/**'       # Trigger on shared security changes
 
