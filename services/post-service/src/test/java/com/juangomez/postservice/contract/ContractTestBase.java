@@ -2,6 +2,7 @@ package com.juangomez.postservice.contract;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.juangomez.postservice.config.TestContainersConfig;
 import com.juangomez.postservice.controller.PostController;
 import com.juangomez.postservice.model.dto.CreatePostRequest;
 import com.juangomez.postservice.model.dto.CreatePostResponse;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -21,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest(classes = com.juangomez.postservice.PostServiceApplication.class)
+@Import(TestContainersConfig.class)
 public class ContractTestBase {
 
     @Autowired
