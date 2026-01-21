@@ -9,7 +9,7 @@ on:
 
 jobs:
   call-template:
-    uses: ./.github/workflows/templates/service-ci.yaml
+    uses: ./.github/workflows/service-ci.yaml
     with:
       service_name: 'post-service'
       service_path: 'services/post-service'

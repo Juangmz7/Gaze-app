@@ -1,16 +1,16 @@
-name: CI Feed Service
+name: CI User Service
 on:
   push:
     branches: [ "main" ]
     paths:
-      - 'services/feed-service/**' # Trigger on service changes
+      - 'services/user-service/**' # Trigger on service changes
       - 'common-events/**'         # Trigger on shared events changes
       - 'common-security/**'       # Trigger on shared security changes
 
 jobs:
   call-template:
-    uses: ./.github/workflows/templates/service-ci.yaml
+    uses: ./.github/workflows/service-ci.yaml
     with:
-      service_name: 'feed-service'
-      service_path: 'services/feed-service'
+      service_name: 'user-service'
+      service_path: 'services/user-service'
     secrets: inherit # Pass repo secrets automatically
