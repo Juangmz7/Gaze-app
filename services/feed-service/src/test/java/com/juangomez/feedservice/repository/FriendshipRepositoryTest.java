@@ -45,7 +45,8 @@ class FriendshipRepositoryTest {
 
         // When
         // Testing the specific method used in isFriend()
-        boolean exists = friendshipRepository.existsFriendshipByUser1IdAndUser2Id(idA, idB);
+        boolean exists = friendshipRepository
+                .existsFriendshipByUser1IdAndUser2Id(friendship.getUser1Id(), friendship.getUser2Id());
 
         // Then
         assertThat(exists).isTrue();
