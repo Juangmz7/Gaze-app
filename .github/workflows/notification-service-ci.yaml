@@ -1,9 +1,9 @@
-name: CI User Service
+name: CI Notification Service
 on:
   push:
     branches: [ "main", "test" ]
     paths:
-      - 'services/user-service/**' # Trigger on service changes
+      - 'services/notification-service/**' # Trigger on service changes
       - 'common-events/**'         # Trigger on shared events changes
       - 'common-security/**'       # Trigger on shared security changes
 
@@ -11,6 +11,6 @@ jobs:
   call-template:
     uses: ./.github/workflows/service-ci.yaml
     with:
-      service_name: 'user-service'
-      service_path: 'services/user-service'
+      service_name: 'notification-service'
+      service_path: 'services/notification-service'
     secrets: inherit # Pass repo secrets automatically

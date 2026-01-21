@@ -1,7 +1,7 @@
 name: CI Social Service
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "test" ]
     paths:
       - 'services/feed-service/**' # Trigger on service changes
       - 'common-events/**'         # Trigger on shared events changes

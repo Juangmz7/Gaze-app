@@ -1,7 +1,7 @@
 name: CI Post Service
 on:
   push:
-    branches: [ "test" ]
+    branches: [ "test", "test" ]
     paths:
       - 'services/post-service/**' # Trigger on service changes
       - 'common-events/**'         # Trigger on shared events changes

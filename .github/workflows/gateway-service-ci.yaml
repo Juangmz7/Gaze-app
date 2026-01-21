@@ -1,7 +1,7 @@
 name: CI Gateway Service
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "test" ]
     paths:
       - 'api-gateway/**' # Trigger on service changes
       - 'common-events/**'         # Trigger on shared events changes
