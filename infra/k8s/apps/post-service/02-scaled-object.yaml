@@ -1,0 +1,23 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: post-service-scaler
+  namespace: gaze-app
+spec:
+  scaleTargetRef:
+    name: post-service
+  minReplicaCount: 1        # Minimum pods during normal hours
+  maxReplicaCount: 8       # Maximum pods under heavy load
+  pollingInterval:  15      # Frequency for checking the work load in seconds
+  cooldownPeriod:   120
+  fallback:
+    failureThreshold: 3     #  If Connection fails 3 times then safe mode
+    replicas: 2             # Safe mode
+  triggers:
+    # Workload Scaler
+    - type: cpu
+      metricType: Utilization
+      metadata:
+        value: "50"                # Scale up if CPU usage exceeds 50%
+
+  # TODO: Set trigger when queues are busy

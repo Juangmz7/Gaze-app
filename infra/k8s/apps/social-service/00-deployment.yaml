@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: social-service
+  namespace: gaze-app
+  labels:
+    app: social-service
+spec:
+  selector:
+    matchLabels:
+      app: social-service
+  template:
+    metadata:
+      labels:
+        app: social-service
+    spec:
+      containers:
+        - name: social-service
+          image: juangmz7/social-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "100m"     # Request 0.1 CPU
+              memory: "256Mi"
+            limits:
+              cpu: "500m"    # Set CPU limit in 0.2
+              memory: "512Mi"
