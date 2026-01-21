@@ -3,9 +3,9 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'api-gateway/**' # Trigger on service changes
-      - 'common-events/**'         # Trigger on shared events changes
-      - 'common-security/**'       # Trigger on shared security changes
+      - '../../api-gateway' # Trigger on service changes
+      - '../../common-events'         # Trigger on shared events changes
+      - '../../common-security'       # Trigger on shared security changes
 
 jobs:
   call-template:
