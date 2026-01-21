@@ -26,7 +26,6 @@
         <module>services/user-service</module>
         <module>common-security</module>
         <module>api-gateway</module>
-        <module>discovery-service</module>
     </modules>
 
     <properties>
