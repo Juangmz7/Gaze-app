@@ -6,31 +6,24 @@ metadata:
 spec:
   generators:
     - list:
-        # TODO: Complete
         elements:
           - name: feed-service
             path: infra/k8s/apps/feed-service
-            namespace: gaze-app
 
           - name: post-service
             path: infra/k8s/apps/post-service
-            namespace: gaze-app
 
           - name: gateway-service
             path: infra/k8s/apps/gateway-api
-            namespace: gaze-app
 
           - name: notification-service
             path: infra/k8s/apps/notification-service
-            namespace: gaze-app
 
           - name: social-service
             path: infra/k8s/apps/social-service
-            namespace: gaze-app
 
           - name: user-service
             path: infra/k8s/apps/user-service
-            namespace: gaze-app
 
   template:
     metadata:
@@ -45,7 +38,7 @@ spec:
 
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{namespace}}'
+        namespace: gaze-app
 
       syncPolicy:
         automated:
