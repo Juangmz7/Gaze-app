@@ -45,11 +45,4 @@ postgresql:
 
     # --- INITIALIZATION SCRIPT ---
     initdb:
-      scripts:
-        init_logic.sql: |
-          -- DB Creation
-          CREATE DATABASE feed_db;
-          CREATE DATABASE user_db;
-          CREATE DATABASE post_db;
-          CREATE DATABASE notification_db;
-          CREATE DATABASE social_db;
+      userConfigsSecret: postgres-init-db-script
