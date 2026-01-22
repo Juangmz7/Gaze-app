@@ -1,0 +1,50 @@
+redis:
+  architecture: standalone
+  fullnameOverride: "redis-ratelimit"
+
+  # --- Authentication ---
+  auth:
+    enabled: true
+    # We point to the secret we created earlier
+    existingSecret: redis-ratelimit-secret
+    existingSecretPasswordKey: redis-password
+
+  # --- Master Configuration ---
+  master:
+    # --- Persistence ---
+    persistence:
+      enabled: false # Dev env
+
+    # --- Resources ---
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 128Mi
+
+    # --- RATE LIMIT OPTIMIZATION ---
+    extraFlags:
+      - "--maxmemory-policy volatile-lru"
+      - "--maxmemory 100mb" # Leave some buffer below the pod limit (128Mi)
+
+    # --- Health Checks ---
+    livenessProbe:
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 5
+
+    readinessProbe:
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 5
+
+  # --- Network ---
+  service:
+    type: ClusterIP
+    ports:
+      redis: 6379
