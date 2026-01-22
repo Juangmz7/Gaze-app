@@ -1,0 +1,9 @@
+apiVersion: v2
+name: rabbitmq-wrapper
+description: Wrapper for installing RabbitMQ from Bitnami
+type: application
+version: 1.0.0
+dependencies:
+  - name: rabbitmq
+    version: 12.x.x
+    repository: https://charts.bitnami.com/bitnami

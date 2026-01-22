@@ -1,0 +1,7 @@
+rabbitmq:
+  fullnameOverride: "rabbitmq"
+  auth:
+    username: admin-user
+    existingPasswordSecret: rabbitmq-secret
+  service:
+    type: ClusterIP
