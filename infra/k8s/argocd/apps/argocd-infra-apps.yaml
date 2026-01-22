@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: infra-application-set
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: rabbitmq
+            path: infra/k8s/infra-components/rabbitmq
+
+          - name: postgres
+            path: infra/k8s/infra-components/postgres
+
+          - name: redis
+            path: infra/k8s/infra-components/redis-ratelimit
+
+  template:
+    metadata:
+      name: '{{name}}-infra'
+      namespace: argocd
+    spec:
+      project: default
+      source:
+        repoURL: 'https://github.com/Juangmz7/Gaze-app.git'
+        targetRevision: test
+        path: '{{path}}'
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: infra
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
