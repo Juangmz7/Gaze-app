@@ -20,4 +20,11 @@ spec:
       metadata:
         value: "50"                # Scale up if CPU usage exceeds 50%
 
+    - type: cron
+      metadata:
+        timezone: Europe/Brussels
+        start: "0 20 * * *"        # At 20:00
+        end: "0 8 * * *"           # At 08:00
+        desiredReplicas: "2"
+
   # TODO: Set trigger when queues are busy
