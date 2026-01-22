@@ -4,6 +4,8 @@ postgresql:
     registry: docker.io
     repository: bitnamilegacy/postgresql
     tag: "15"
+  volumePermissions:
+    enabled: true
   global:
     postgresql:
       auth:
