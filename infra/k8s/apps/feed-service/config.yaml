@@ -7,10 +7,10 @@ data:
   SERVER_PORT: "8080"
   SPRING_APP_NAME: "feed-service"
 
-  INFRA_DB_HOST: "mi-postgres.infra.svc.cluster.local"
+  INFRA_DB_HOST: "postgres.infra.svc.cluster.local"
   INFRA_DB_PORT: "5432"
-  INFRA_REDIS_HOST: "mi-redis-master.infra.svc.cluster.local"
-  INFRA_RABBIT_HOST: "mi-rabbitmq.infra.svc.cluster.local"
+  INFRA_REDIS_HOST: "redis-master.infra.svc.cluster.local"
+  INFRA_RABBIT_HOST: "rabbitmq.infra.svc.cluster.local"
 
   FEED_DB_NAME: "feed_db"
   FEED_DB_USER: "feed_user"
