@@ -1,8 +1,6 @@
 .idea/
 
-infra/k8s/common/secrets/postgres-secret.yaml
-infra/k8s/common/secrets/rabbitmq-secret.yaml
-infra/k8s/common/secrets/redis-ratelimit-secret.yaml
+infra/k8s/common/secrets/
 
 common-security/target/
 common-events/target/
