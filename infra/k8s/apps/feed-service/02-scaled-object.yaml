@@ -20,11 +20,17 @@ spec:
       metadata:
         value: "50"                # Scale up if CPU usage exceeds 50%
 
-    - type: cron
+    # Scales with queue length
+    - type: rabbitmq
       metadata:
-        timezone: Europe/Brussels
-        start: "0 20 * * *"        # At 20:00
-        end: "0 8 * * *"           # At 08:00
-        desiredReplicas: "2"
+        protocol: http
 
-  # TODO: Set trigger when queues are busy
+        # Since all queues for this project have been already defined and this is not a prod env,
+        # instead of using helm for abstracting variables, we use regex
+        queueName: "^.*feed-service.*$"
+        useRegex: "true"
+        mode: QueueLength
+        value: "20"
+        operation: sum
+      authenticationRef:
+        name: keda-trigger-auth-rabbitmq-conn
