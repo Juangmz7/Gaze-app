@@ -1,5 +1,7 @@
 postgresql:
   fullnameOverride: "postgres"
+  image:
+    tag: "15"
   global:
     postgresql:
       auth:
