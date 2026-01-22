@@ -17,7 +17,7 @@ spec:
             namespace: gaze-app
 
           - name: gateway-service
-            path: infra/k8s/apps/gateway-service
+            path: infra/k8s/apps/gateway-api
             namespace: gaze-app
 
           - name: notification-service
