@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'https://github.com/Juangmz7/Gaze-app.git'
     targetRevision: HEAD
-    path: infra/k8s/argocd
+    path: infra/k8s/argocd/apps
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd        # Installed at argocd namespace
