@@ -4,7 +4,7 @@ postgresql:
     postgresql:
       auth:
         username: postgres      # Superadmin user
-        existingSecret: postgres-secret
+        existingSecret: postgres-secrets
         secretKeys:
           adminPasswordKey: postgres-password
 
@@ -45,4 +45,4 @@ postgresql:
 
     # --- INITIALIZATION SCRIPT ---
     initdb:
-      userConfigsSecret: postgres-init-db-script
+      scriptsSecret: postgres-init-db-script
