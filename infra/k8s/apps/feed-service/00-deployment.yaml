@@ -22,8 +22,67 @@ spec:
             - containerPort: 8080
           resources:
             requests:
-              cpu: "100m"     # Request 0.1 CPU
+              cpu: "100m"
               memory: "256Mi"
             limits:
-              cpu: "500m"    # Set CPU limit in 0.2
+              cpu: "500m"
               memory: "512Mi"
+
+        # --- App configuration ---
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: feed-config
+                  key: SERVER_PORT
+
+            - name: SPRING_APPLICATION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: feed-config
+                  key: SPRING_APP_NAME
+
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: feed-config
+                  key: INFRA_DB_HOST
+
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: feed-config
+                  key: INFRA_DB_PORT
+
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: feed-config
+                  key: FEED_DB_NAME
+
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
+
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: feed-config
+                  key: FEED_DB_USER
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: feed-secrets
+                  key: feed-db-password
+
+            - name: SPRING_RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: feed-config
+                  key: INFRA_RABBIT_HOST
+
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: feed-config
+                  key: AUTH_JWK_URI
