@@ -73,7 +73,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: notification-secrets
-                  key:
+                  key:  mail-password
 
             - name: SPRING_RABBITMQ_HOST
               valueFrom:
