@@ -19,13 +19,55 @@ spec:
           image: juangmz7/gateway-api:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - containerPort: 8090
           resources:
             requests:
-              cpu: "100m"     # Request 0.1 CPU
+              cpu: "100m"
               memory: "256Mi"
             limits:
-              cpu: "500m"    # Set CPU limit in 0.2
+              cpu: "500m"
               memory: "512Mi"
 
-        # TODO: Set env fields
+          # --- App config ---
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: SERVER_PORT
+
+            - name: SPRING_APP_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: SPRING_APP_NAME
+
+            - name: USER_SVC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: USER_SVC_URL
+
+            - name: SOCIAL_SVC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: SOCIAL_SVC_URL
+
+            - name: FEED_SVC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: FEED_SVC_URL
+
+            - name: POST_SVC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: POST_SVC_URL
+
+            - name: JWK_SET_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: JWK_SET_URI
