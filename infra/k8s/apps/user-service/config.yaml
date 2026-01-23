@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-config
+  namespace: gaze-app
+data:
+  SERVER_PORT: "8080"
+  SPRING_APP_NAME: "user-service"
+
+  INFRA_DB_HOST: "postgres.infra.svc.cluster.local"
+  INFRA_DB_PORT: "5432"
+  INFRA_RABBIT_HOST: "rabbitmq.infra.svc.cluster.local"
+
+  FEED_DB_NAME: "user_db"
+  FEED_DB_USER: "user_user"
