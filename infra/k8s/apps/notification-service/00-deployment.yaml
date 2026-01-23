@@ -27,3 +27,68 @@ spec:
             limits:
               cpu: "500m"    # Set CPU limit in 0.2
               memory: "512Mi"
+
+          # --- App configuration ---
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-config
+                  key: SERVER_PORT
+
+            - name: SPRING_APPLICATION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-config
+                  key: SPRING_APP_NAME
+
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-config
+                  key: INFRA_DB_HOST
+
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-config
+                  key: INFRA_DB_PORT
+
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-config
+                  key: NOTIFICATION_DB_NAME
+
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
+
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-config
+                  key: NOTIFICATION_DB_USER
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secrets
+                  key:
+
+            - name: SPRING_RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-config
+                  key: INFRA_RABBIT_HOST
+
+            - name: MAIL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-config
+                  key: MAIL_HOST
+
+            - name: MAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-config
+                  key: MAIL_PORT

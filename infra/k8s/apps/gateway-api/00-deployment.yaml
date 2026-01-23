@@ -27,3 +27,5 @@ spec:
             limits:
               cpu: "500m"    # Set CPU limit in 0.2
               memory: "512Mi"
+
+        # TODO: Set env fields
