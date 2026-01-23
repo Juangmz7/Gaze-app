@@ -11,5 +11,5 @@ data:
   INFRA_DB_PORT: "5432"
   INFRA_RABBIT_HOST: "rabbitmq.infra.svc.cluster.local"
 
-  FEED_DB_NAME: "user_db"
-  FEED_DB_USER: "user_user"
+  USER_DB_NAME: "user_db"
+  USER_DB_USER: "user_user"

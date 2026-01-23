@@ -11,7 +11,7 @@ data:
   INFRA_DB_PORT: "5432"
   INFRA_RABBIT_HOST: "rabbitmq.infra.svc.cluster.local"
 
-  FEED_DB_NAME: "social_db"
-  FEED_DB_USER: "social_user"
+  SOCIAL_DB_NAME: "social_db"
+  SOCIAL_DB_USER: "social_user"
 
   AUTH_JWK_URI: "http://user-service.gaze-app.svc.cluster.local:8080/api/v1/user/.well-known/jwks.json"
