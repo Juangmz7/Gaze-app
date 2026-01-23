@@ -1,11 +1,10 @@
 rabbitmq:
   fullnameOverride: "rabbitmq"
-  rabbitmq:
-    image:
-      registry: docker.io
-      repository: bitnamilegacy/rabbitmq
-      tag: "3.12-debian-12"
-      pullPolicy: Always
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/rabbitmq
+    tag: "3.12-debian-12"
+    pullPolicy: Always
   auth:
     username: admin-user
     existingPasswordSecret: rabbitmq-secrets
