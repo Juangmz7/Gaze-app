@@ -2,9 +2,9 @@ apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
 metadata:
   name: keda-trigger-auth-rabbitmq-conn
-  namespace: gaze-app
+  namespace: infra
 spec:
   secretTargetRef:
     - parameter: host
-      name: keda-rabbitmq-secret
+      name: rabbitmq-secrets
       key: host

@@ -4,13 +4,6 @@ rabbitmq:
     registry: docker.io
     repository: bitnamilegacy/rabbitmq
     tag: "3.12-debian-12"
-#  volumePermissions:
-#    enabled: true
-#    image:
-#      registry: docker.io
-#      repository: bitnamilegacy/os-shell
-#      tag: "11"
-#      pullPolicy: IfNotPresent
   auth:
     username: admin-user
     existingPasswordSecret: rabbitmq-secrets
