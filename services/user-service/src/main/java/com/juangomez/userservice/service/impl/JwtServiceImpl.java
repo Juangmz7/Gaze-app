@@ -8,11 +8,11 @@ import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -25,11 +25,11 @@ import java.util.function.Function;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    @Value("classpath:certs/private.pem")
-    private Resource privateKeyResource;
+    @Value("${jwt.keys.private.path}")
+    private String privateKeyPath;
 
-    @Value("classpath:certs/public.pem")
-    private Resource publicKeyResource;
+    @Value("${jwt.keys.public.path}")
+    private String publicKeyPath;
 
     // Hold the actual keys
     private PrivateKey privateKey;
@@ -38,12 +38,12 @@ public class JwtServiceImpl implements JwtService {
     // Convert Resource -> Key on startup
     @PostConstruct
     public void initKeys() throws Exception {
-        this.privateKey = readPrivateKey(privateKeyResource);
-        this.publicKey = readPublicKey(publicKeyResource);
+        this.privateKey = readPrivateKey(privateKeyPath);
+        this.publicKey = readPublicKey(publicKeyPath);
     }
 
-    private PrivateKey readPrivateKey(Resource resource) throws Exception {
-        String key = new String(resource.getInputStream().readAllBytes())
+    private PrivateKey readPrivateKey(String path) throws Exception {
+        String key = new String(Files.readAllBytes(Paths.get(path)))
                 .replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "")
                 .replaceAll("\\s", ""); // Remove newlines/spaces
@@ -52,8 +52,8 @@ public class JwtServiceImpl implements JwtService {
         return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(encoded));
     }
 
-    private PublicKey readPublicKey(Resource resource) throws Exception {
-        String key = new String(resource.getInputStream().readAllBytes())
+    private PublicKey readPublicKey(String path) throws Exception {
+        String key = new String(Files.readAllBytes(Paths.get(path)))
                 .replace("-----BEGIN PUBLIC KEY-----", "")
                 .replace("-----END PUBLIC KEY-----", "")
                 .replaceAll("\\s", "");
