@@ -5,5 +5,5 @@ type: application
 version: 1.0.0
 dependencies:
   - name: postgresql
-    version: 13.x.x
-    repository: https://charts.bitnami.com/bitnami
+    version: "13.2.x"
+    repository: "oci://registry-1.docker.io/bitnamicharts"

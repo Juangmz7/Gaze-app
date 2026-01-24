@@ -5,5 +5,5 @@ type: application
 version: 1.0.0
 dependencies:
   - name: rabbitmq
-    version: 12.x.x
-    repository: https://charts.bitnami.com/bitnami
+    version: "12.x.x"
+    repository: "oci://registry-1.docker.io/bitnamicharts"
