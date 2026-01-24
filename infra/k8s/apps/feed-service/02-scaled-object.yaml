@@ -23,6 +23,8 @@ spec:
     # Scales with queue length
     - type: rabbitmq
       metadata:
+        protocol: amqp
+
         # Since all queues for this project have been already defined and this is not a prod env,
         # instead of using helm for abstracting variables, we use regex
         queueName: "^.*feed-service.*$"
