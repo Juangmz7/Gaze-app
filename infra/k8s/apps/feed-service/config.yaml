@@ -9,10 +9,12 @@ data:
 
   INFRA_DB_HOST: "postgres.infra.svc.cluster.local"
   INFRA_DB_PORT: "5432"
-  INFRA_REDIS_HOST: "redis-master.infra.svc.cluster.local"
+
   INFRA_RABBIT_HOST: "rabbitmq.infra.svc.cluster.local"
+  RABBITMQ_USERNAME: admin-user
 
   FEED_DB_NAME: "feed_db"
   FEED_DB_USER: "feed_user"
+
 
   AUTH_JWK_URI: "http://user-service.gaze-app.svc.cluster.local:8080/api/v1/user/.well-known/jwks.json"

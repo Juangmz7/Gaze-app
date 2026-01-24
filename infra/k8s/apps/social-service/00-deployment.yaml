@@ -81,6 +81,18 @@ spec:
                   name: social-config
                   key: INFRA_RABBIT_HOST
 
+            - name: SPRING_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: social-secrets
+                  key: rabbitmq-password
+
+            - name: SPRING_RABBITMQ_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: social-config
+                  key: RABBITMQ_USERNAME
+
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
               valueFrom:
                 configMapKeyRef:

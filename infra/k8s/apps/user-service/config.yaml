@@ -9,7 +9,9 @@ data:
 
   INFRA_DB_HOST: "postgres.infra.svc.cluster.local"
   INFRA_DB_PORT: "5432"
+
   INFRA_RABBIT_HOST: "rabbitmq.infra.svc.cluster.local"
+  RABBITMQ_USERNAME: admin-user
 
   USER_DB_NAME: "user_db"
   USER_DB_USER: "user_user"

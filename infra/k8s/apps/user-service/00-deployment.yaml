@@ -80,3 +80,15 @@ spec:
                 configMapKeyRef:
                   name: user-config
                   key: INFRA_RABBIT_HOST
+
+            - name: SPRING_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-secrets
+                  key: rabbitmq-password
+
+            - name: SPRING_RABBITMQ_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: user-config
+                  key: RABBITMQ_USERNAME

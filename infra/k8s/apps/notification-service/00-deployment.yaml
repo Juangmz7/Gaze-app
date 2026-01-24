@@ -73,7 +73,19 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: notification-secrets
-                  key:  mail-password
+                  key: notification-db-password
+
+            - name: SPRING_MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secrets
+                  key: mail-username
+
+            - name: SPRING_MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secrets
+                  key: mail-password
 
             - name: SPRING_RABBITMQ_HOST
               valueFrom:
@@ -81,13 +93,13 @@ spec:
                   name: notification-config
                   key: INFRA_RABBIT_HOST
 
-            - name: MAIL_HOST
+            - name: SPRING_MAIL_HOST
               valueFrom:
                 configMapKeyRef:
                   name: notification-config
                   key: MAIL_HOST
 
-            - name: MAIL_PORT
+            - name: SPRING_MAIL_PORT
               valueFrom:
                 configMapKeyRef:
                   name: notification-config
