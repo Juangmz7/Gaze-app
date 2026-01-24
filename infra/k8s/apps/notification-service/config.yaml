@@ -15,4 +15,4 @@ data:
   MAIL_PORT: "587"
 
   NOTIFICATION_DB_NAME: "notification_db"
-  NOTIFICATION_DB_USER: "notification_user"
+  NOTIFICATION_DB_USER: "notif_user"
