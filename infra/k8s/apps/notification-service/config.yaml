@@ -11,8 +11,8 @@ data:
   INFRA_DB_PORT: "5432"
   INFRA_RABBIT_HOST: "rabbitmq.infra.svc.cluster.local"
 
-  MAIL_HOST: smtp.gmail.com
-  MAIL_PORT: 587
+  MAIL_HOST: "smtp.gmail.com"
+  MAIL_PORT: "587"
 
   NOTIFICATION_DB_NAME: "notification_db"
   NOTIFICATION_DB_USER: "notification_user"
