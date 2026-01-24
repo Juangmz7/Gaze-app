@@ -15,3 +15,6 @@ data:
 
   USER_DB_NAME: "user_db"
   USER_DB_USER: "user_user"
+
+  JWT_PRIVATE_KEY_PATH: "/app/certs/private.pem"
+  JWT_PUBLIC_KEY_PATH: "/app/certs/public/public.pem"

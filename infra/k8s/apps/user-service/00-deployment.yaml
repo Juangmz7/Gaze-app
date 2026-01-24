@@ -16,16 +16,23 @@ spec:
     spec:
       containers:
         - name: user-service
+          volumeMounts:
+            - name: secret-volume
+              mountPath: "/app/certs"
+              readOnly: true
+            - name: public-key-volume
+              mountPath: "/app/certs/public"
+              readOnly: true
           image: juangmz7/user-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           resources:
             requests:
-              cpu: "100m"     # Request 0.1 CPU
+              cpu: "100m"
               memory: "256Mi"
             limits:
-              cpu: "500m"    # Set CPU limit in 0.2
+              cpu: "500m"
               memory: "512Mi"
 
           # --- App configuration ---
@@ -92,3 +99,23 @@ spec:
                 configMapKeyRef:
                   name: user-config
                   key: RABBITMQ_USERNAME
+
+            - name: JWT_KEYS_PRIVATE_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: user-config
+                  key: JWT_PRIVATE_KEY_PATH
+
+            - name: JWT_KEYS_PUBLIC_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: user-config
+                  key: JWT_PUBLIC_KEY_PATH
+
+      volumes:
+        - name: secret-volume
+          secret:
+            secretName: jwt-keys
+        - name: public-key-volume
+          secret:
+            secretName: jwt-public-key
