@@ -58,7 +58,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: user-config
-                  key: USER_DB_USER
+                  key: USER_DB_NAME
 
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
