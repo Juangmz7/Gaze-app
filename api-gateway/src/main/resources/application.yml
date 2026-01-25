@@ -1,3 +1,20 @@
+app:
+  routes:
+    user:
+      host: ${USER_SVC_URL:http://localhost:8081}
+      auth: "/api/v1/user/login, /api/v1/user/register"
+      base: "/api/v1/user/**"
+    social:
+      host: ${SOCIAL_SVC_URL:http://localhost:8082}
+      auth: "/api/v1/social/friend-request/**"
+      base: "/api/v1/social/friend-request"
+    post:
+      host: ${POST_SVC_URL:http://localhost:8083}
+      base: "/api/v1/post/**"
+    feed:
+      host: ${FEED_SVC_URL:http://localhost:8084}
+      base: "/api/v1/feed/**"
+
 x-config:
   rate-limits:
     command: &commandRateLimit
@@ -12,23 +29,25 @@ x-config:
       key-resolver: "#{@userKeyResolver}"
 
 server:
-  port: ${SERVER_PORT:8090}
+  port: 8089
 
 spring:
   application:
-    name: ${SPRING_APP_NAME:api-gateway}
+    name: api-gateway
   security:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${JWK_SET_URI}
+          jwk-set-uri: http://localhost:8081/api/v1/user/.well-known/jwks.json
+
   cloud:
     gateway:
       routes:
+        # --- User Service ---
         - id: users-command-route
-          uri: ${USER_SVC_URL}
+          uri: ${app.routes.user.host}  # <--- Reference to host variable
           predicates:
-            - Path=/api/v1/user/login, /api/v1/user/register
+            - Path=${app.routes.user.auth}
             - Method=POST
           filters:
             - name: CircuitBreaker
@@ -38,10 +57,11 @@ spring:
             - name: RequestRateLimiter
               args: *commandRateLimit
 
+        # --- Social Service (Command) ---
         - id: social-command-route
-          uri: ${SOCIAL_SVC_URL}
+          uri: ${app.routes.social.host}  # <--- Reference to host variable
           predicates:
-            - Path=/api/v1/social/friend-request/**
+            - Path=${app.routes.social.auth}
             - Method=POST
           filters:
             - TokenRelay
@@ -52,10 +72,11 @@ spring:
             - name: RequestRateLimiter
               args: *commandRateLimit
 
+        # --- Social Service (Query) ---
         - id: social-queries-route
-          uri: ${SOCIAL_SVC_URL}
+          uri: ${app.routes.social.host}  # <--- Reference to host variable
           predicates:
-            - Path=/api/v1/social/friend-request
+            - Path=${app.routes.social.base}
             - Method=GET
           filters:
             - TokenRelay
@@ -66,10 +87,11 @@ spring:
             - name: RequestRateLimiter
               args: *queryRateLimit
 
+        # --- Feed Service ---
         - id: feed-queries-route
-          uri: ${FEED_SVC_URL}
+          uri: ${app.routes.feed.host}  # <--- Reference to host variable
           predicates:
-            - Path=/api/v1/feed/**
+            - Path=${app.routes.feed.base}
             - Method=GET
           filters:
             - TokenRelay
@@ -80,10 +102,11 @@ spring:
             - name: RequestRateLimiter
               args: *queryRateLimit
 
+        # --- Post Service ---
         - id: post-command-route
-          uri: ${POST_SVC_URL}
+          uri: ${app.routes.post.host}  # <--- Reference to host variable
           predicates:
-            - Path=/api/v1/post/**
+            - Path=${app.routes.post.base}
             - Method=POST, DELETE
           filters:
             - TokenRelay
