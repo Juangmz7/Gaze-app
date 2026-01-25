@@ -1,0 +1,11 @@
+rabbitmq:
+  fullnameOverride: "rabbitmq"
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/rabbitmq
+    tag: "3.12-debian-12"
+  auth:
+    username: admin-user
+    existingPasswordSecret: rabbitmq-secrets
+  service:
+    type: ClusterIP

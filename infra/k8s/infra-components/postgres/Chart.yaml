@@ -1,0 +1,9 @@
+apiVersion: v2
+name: postgres-wrapper
+description: Wrapper for Gaze App Postgres
+type: application
+version: 1.0.0
+dependencies:
+  - name: postgresql
+    version: "13.2.x"
+    repository: "oci://registry-1.docker.io/bitnamicharts"

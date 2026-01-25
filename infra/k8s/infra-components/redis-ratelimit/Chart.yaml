@@ -1,0 +1,9 @@
+apiVersion: v2
+name: redis-ratelimit-wrapper
+description: Wrapper for Gaze App Redis-Limit
+type: application
+version: 1.0.0
+dependencies:
+  - name: redis
+    version: "20.1.x"
+    repository: "oci://registry-1.docker.io/bitnamicharts"

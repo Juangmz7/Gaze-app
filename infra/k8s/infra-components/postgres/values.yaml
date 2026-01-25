@@ -1,0 +1,59 @@
+postgresql:
+  fullnameOverride: "postgres"
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/postgresql
+    tag: "15"
+  volumePermissions:
+    enabled: true
+    image:
+      registry: docker.io
+      repository: bitnamilegacy/os-shell
+      tag: "11"
+      pullPolicy: IfNotPresent
+  global:
+    postgresql:
+      auth:
+        username: postgres      # Superadmin user
+        existingSecret: postgres-secrets
+        secretKeys:
+          adminPasswordKey: postgres-password
+
+  # --- Resource Management ---
+  architecture: standalone      # Single node to save resources
+
+  primary:
+    persistence:
+      size: 4Gi
+    resources:
+      requests:
+        cpu: 400m
+        memory: 1Gi
+
+    startupProbe:
+      enabled: true
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 30
+      successThreshold: 1
+
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 5
+      successThreshold: 1
+
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 5
+      successThreshold: 1
+
+    # --- INITIALIZATION SCRIPT ---
+    initdb:
+      scriptsSecret: postgres-init-db-script

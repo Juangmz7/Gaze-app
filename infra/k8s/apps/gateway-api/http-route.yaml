@@ -1,0 +1,17 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-route
+  namespace: gaze-app
+spec:
+  parentRefs:
+    - name: gateway         # Connection with gateway
+      sectionName: http     # Reefers to the gateway listener for http
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: gateway-service   # Sends to (Service)
+          port: 80

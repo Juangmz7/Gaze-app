@@ -1,0 +1,16 @@
+name: CI Gateway Service
+on:
+  push:
+    branches: [ "main", "test" ]
+    paths:
+      - 'api-gateway/**' # Trigger on service changes
+      - 'common-events/**'         # Trigger on shared events changes
+      - 'common-security/**'       # Trigger on shared security changes
+
+jobs:
+  call-template:
+    uses: ./.github/workflows/service-ci.yaml
+    with:
+      service_name: 'gateway-api'
+      service_path: 'api-gateway'
+    secrets: inherit # Pass repo secrets automatically

@@ -1,29 +1,36 @@
+app:
+  routes:
+    user:
+      host: ${USER_SVC_URL:http://localhost:8081}
+      auth: "/api/v1/user/login, /api/v1/user/register"
+      base: "/api/v1/user/**"
+    social:
+      host: ${SOCIAL_SVC_URL:http://localhost:8082}
+      auth: "/api/v1/social/friend-request/**"
+      base: "/api/v1/social/friend-request"
+    post:
+      host: ${POST_SVC_URL:http://localhost:8083}
+      base: "/api/v1/post/**"
+    feed:
+      host: ${FEED_SVC_URL:http://localhost:8084}
+      base: "/api/v1/feed/**"
+
 x-config:
   rate-limits:
     command: &commandRateLimit
-      # Requests per second
       redis-rate-limiter.replenishRate: 2
-
-      # Peek number of requests
       redis-rate-limiter.burstCapacity: 5
       redis-rate-limiter.requestedTokens: 1
-
-      # Name of the bean from RateLimitConfig
       key-resolver: "#{@userKeyResolver}"
-
     query: &queryRateLimit
-      # Requests per second
       redis-rate-limiter.replenishRate: 10
-
-      # Peek number of requests
       redis-rate-limiter.burstCapacity: 20
       redis-rate-limiter.requestedTokens: 1
-
-      # Name of the bean from RateLimitConfig
       key-resolver: "#{@userKeyResolver}"
 
 server:
-  port: 8090
+  port: 8089
+
 spring:
   application:
     name: api-gateway
@@ -32,14 +39,15 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8081/api/v1/user/.well-known/jwks.json
+
   cloud:
     gateway:
       routes:
-        # USER-SERVICE commands
+        # --- User Service ---
         - id: users-command-route
-          uri: lb://user-service
+          uri: ${app.routes.user.host}  # <--- Reference to host variable
           predicates:
-            - Path=/api/v1/user/login, /api/v1/user/register
+            - Path=${app.routes.user.auth}
             - Method=POST
           filters:
             - name: CircuitBreaker
@@ -49,14 +57,14 @@ spring:
             - name: RequestRateLimiter
               args: *commandRateLimit
 
-        # SOCIAL-SERVICE commands
+        # --- Social Service (Command) ---
         - id: social-command-route
-          uri: lb://social-service
+          uri: ${app.routes.social.host}  # <--- Reference to host variable
           predicates:
-            - Path=/api/v1/social/friend-request/**
+            - Path=${app.routes.social.auth}
             - Method=POST
           filters:
-            - TokenRelay  # For adding the jwt to the request
+            - TokenRelay
             - name: CircuitBreaker
               args:
                 name: commandResilienceConfig
@@ -64,11 +72,11 @@ spring:
             - name: RequestRateLimiter
               args: *commandRateLimit
 
-          # SOCIAL-SERVICE queries
+        # --- Social Service (Query) ---
         - id: social-queries-route
-          uri: lb://social-service
+          uri: ${app.routes.social.host}  # <--- Reference to host variable
           predicates:
-            - Path=/api/v1/social/friend-request,
+            - Path=${app.routes.social.base}
             - Method=GET
           filters:
             - TokenRelay
@@ -79,11 +87,11 @@ spring:
             - name: RequestRateLimiter
               args: *queryRateLimit
 
-          # FEED-SERVICE (CQRS)
+        # --- Feed Service ---
         - id: feed-queries-route
-          uri: lb://feed-service
+          uri: ${app.routes.feed.host}  # <--- Reference to host variable
           predicates:
-            - Path=/api/v1/feed/**,
+            - Path=${app.routes.feed.base}
             - Method=GET
           filters:
             - TokenRelay
@@ -94,11 +102,11 @@ spring:
             - name: RequestRateLimiter
               args: *queryRateLimit
 
-        # POST-SERVICE commands
+        # --- Post Service ---
         - id: post-command-route
-          uri: lb://post-service
+          uri: ${app.routes.post.host}  # <--- Reference to host variable
           predicates:
-            - Path=/api/v1/post/**,
+            - Path=${app.routes.post.base}
             - Method=POST, DELETE
           filters:
             - TokenRelay
@@ -109,12 +117,7 @@ spring:
             - name: RequestRateLimiter
               args: *commandRateLimit
 
-# ---------------------------------------------------------
-# Resilience config
-# ---------------------------------------------------------
 resilience4j:
-
-  # CIRCUIT BREAKER
   circuitbreaker:
     instances:
       queryResilienceConfig:
@@ -125,24 +128,9 @@ resilience4j:
         slidingWindowSize: 10
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
-
-  # TIME LIMITER
   timelimiter:
     instances:
       queryResilienceConfig:
         timeoutDuration: 1s
       commandResilienceConfig:
         timeoutDuration: 3s
-
-# ---------------------------------------------------------
-# Eureka Configuration
-# ---------------------------------------------------------
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-    register-with-eureka: true
-    fetch-registry: true
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${random.value}

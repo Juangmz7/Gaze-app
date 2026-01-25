@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-api
+  namespace: gaze-app
+  labels:
+    app: gateway-api
+spec:
+  selector:
+    matchLabels:
+      app: gateway-api
+  template:
+    metadata:
+      labels:
+        app: gateway-api
+    spec:
+      containers:
+        - name: gateway-api
+          image: juangmz7/gateway-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8090
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          # --- App config ---
+          env:
+            - name: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+              value: "5"
+            # Server & App Name
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: SERVER_PORT
+
+            - name: api-gateway
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: SPRING_APP_NAME
+
+            - name: USER_SVC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: USER_SVC_URL
+
+            - name: SOCIAL_SVC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: SOCIAL_SVC_URL
+
+            - name: POST_SVC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: POST_SVC_URL
+
+            - name: FEED_SVC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: FEED_SVC_URL
+
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: JWK_SET_URI
+
+            - name: SPRING_DATA_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: INFRA_REDIS_HOST
+
+            - name: SPRING_DATA_REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-secrets
+                  key: redis-ratelimit-password
+
+            - name: SPRING_DATA_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: INFRA_REDIS_PORT

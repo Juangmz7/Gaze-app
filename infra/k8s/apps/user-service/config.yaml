@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-config
+  namespace: gaze-app
+data:
+  SERVER_PORT: "8080"
+  SPRING_APP_NAME: "user-service"
+
+  INFRA_DB_HOST: "postgres.infra.svc.cluster.local"
+  INFRA_DB_PORT: "5432"
+
+  INFRA_RABBIT_HOST: "rabbitmq.infra.svc.cluster.local"
+  RABBITMQ_USERNAME: admin-user
+
+  USER_DB_NAME: "user_db"
+  USER_DB_USER: "user_user"
+
+  JWT_PRIVATE_KEY_PATH: "/app/certs/private.pem"
+  JWT_PUBLIC_KEY_PATH: "/app/certs/public/public.pem"

@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: social-service
+  namespace: gaze-app
+  labels:
+    app: social-service
+spec:
+  selector:
+    matchLabels:
+      app: social-service
+  template:
+    metadata:
+      labels:
+        app: social-service
+    spec:
+      containers:
+        - name: social-service
+          image: juangmz7/social-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "250m"     # Request 0.1 CPU
+              memory: "256Mi"
+            limits:
+              cpu: "500m"    # Set CPU limit in 0.2
+              memory: "512Mi"
+
+          # --- App configuration ---
+          env:
+            - name: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+              value: "5"
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: social-config
+                  key: SERVER_PORT
+
+            - name: SPRING_APPLICATION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: social-config
+                  key: SPRING_APP_NAME
+
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: social-config
+                  key: INFRA_DB_HOST
+
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: social-config
+                  key: INFRA_DB_PORT
+
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: social-config
+                  key: SOCIAL_DB_NAME
+
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
+
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: social-config
+                  key: SOCIAL_DB_USER
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: social-secrets
+                  key: social-db-password
+
+            - name: SPRING_RABBITMQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: social-config
+                  key: INFRA_RABBIT_HOST
+
+            - name: SPRING_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: social-secrets
+                  key: rabbitmq-password
+
+            - name: SPRING_RABBITMQ_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: social-config
+                  key: RABBITMQ_USERNAME
+
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: social-config
+                  key: AUTH_JWK_URI

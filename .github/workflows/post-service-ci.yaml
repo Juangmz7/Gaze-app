@@ -1,0 +1,16 @@
+name: CI Post Service
+on:
+  push:
+    branches: [ "test", "test" ]
+    paths:
+      - 'services/post-service/**' # Trigger on service changes
+      - 'common-events/**'         # Trigger on shared events changes
+      - 'common-security/**'       # Trigger on shared security changes
+
+jobs:
+  call-template:
+    uses: ./.github/workflows/service-ci.yaml
+    with:
+      service_name: 'post-service'
+      service_path: 'services/post-service'
+    secrets: inherit # Pass repo secrets automatically
