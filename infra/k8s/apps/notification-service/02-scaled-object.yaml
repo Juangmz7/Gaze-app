@@ -33,4 +33,4 @@ spec:
         value: "20"
         operation: sum
       authenticationRef:
-        name: keda-trigger-auth-rabbitmq-conn
+        name: notification-keda-trigger-auth-rabbitmq-conn
