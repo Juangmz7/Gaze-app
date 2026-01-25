@@ -1,0 +1,106 @@
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    restart: "no"
+    ports:
+      - "5672:5672"       # Port where applications connect
+      - "15672:15672"     # Port for management interface
+
+  redis:
+    image: redis:alpine
+    container_name: redis-rate-limiter
+    ports:
+      - "6379:6379"
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # --- User Service Database ---
+  user-db:
+    image: postgres:16-alpine
+    container_name: user-db
+    ports:
+      - "5437:5432" # Host Port : Container Port
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: user-db
+    volumes:
+      - user_postgres_data:/var/lib/postgresql/data
+    networks:
+      - social-network
+
+  # --- Post Service Database ---
+  post-db:
+    image: postgres:16-alpine
+    container_name: post-db
+    ports:
+      - "5435:5432" # Maps host 5433 to container 5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: post-db
+    volumes:
+      - post_postgres_data:/var/lib/postgresql/data
+    networks:
+      - social-network
+
+  # --- Feed Service Database ---
+  feed-db:
+    image: postgres:16-alpine
+    container_name: feed-db
+    ports:
+      - "5433:5432" # Maps host 5434 to container 5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: feed-db
+    volumes:
+      - feed_postgres_data:/var/lib/postgresql/data
+    networks:
+      - social-network
+
+  # --- Social Service Database ---
+  social-db:
+    image: postgres:16-alpine
+    container_name: social-db
+    ports:
+      - "5436:5432" # Maps host 5434 to container 5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: social-db
+    volumes:
+      - social_postgres_data:/var/lib/postgresql/data
+    networks:
+      - social-network
+
+  # --- Notification Service Database ---
+  notification-db:
+    image: postgres:16-alpine
+    container_name: notification-db
+    ports:
+      - "5434:5432" # Maps host 5434 to container 5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: notification-db
+    volumes:
+      - notification_postgres_data:/var/lib/postgresql/data
+    networks:
+      - social-network
+
+
+volumes:
+  user_postgres_data:
+  post_postgres_data:
+  feed_postgres_data:
+  social_postgres_data:
+  notification_postgres_data:
+
+networks:
+  social-network:
+    driver: bridge
