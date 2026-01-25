@@ -7,7 +7,7 @@ spec:
   scaleTargetRef:
     name: post-service
   minReplicaCount: 1        # Minimum pods during normal hours
-  maxReplicaCount: 3       # Maximum pods under heavy load
+  maxReplicaCount: 8       # Maximum pods under heavy load
   pollingInterval:  15      # Frequency for checking the work load in seconds
   cooldownPeriod:   120
   fallback:
