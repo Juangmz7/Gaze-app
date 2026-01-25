@@ -30,6 +30,8 @@ spec:
 
           # --- App config ---
           env:
+            - name: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+              value: "5"
             # Server & App Name
             - name: SERVER_PORT
               valueFrom:
