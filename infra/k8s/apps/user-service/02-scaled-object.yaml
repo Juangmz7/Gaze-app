@@ -18,7 +18,7 @@ spec:
     - type: cpu
       metricType: Utilization
       metadata:
-        value: "50"                # Scale up if CPU usage exceeds 50%
+        value: "80"                # Scale up if CPU usage exceeds 50%
 
       # Scales with queue length
     - type: rabbitmq

@@ -22,7 +22,7 @@ spec:
             - containerPort: 8080
           resources:
             requests:
-              cpu: "100m"     # Request 0.1 CPU
+              cpu: "250m"     # Request 0.1 CPU
               memory: "256Mi"
             limits:
               cpu: "500m"    # Set CPU limit in 0.2

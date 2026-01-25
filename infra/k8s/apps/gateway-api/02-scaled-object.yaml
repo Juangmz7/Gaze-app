@@ -18,6 +18,4 @@ spec:
     - type: cpu
       metricType: Utilization
       metadata:
-        value: "50"                # Scale up if CPU usage exceeds 50%
-
-  # TODO: Set trigger when queues are busy
+        value: "80"                # Scale up if CPU usage exceeds 50%
