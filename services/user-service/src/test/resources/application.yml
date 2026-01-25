@@ -1,0 +1,6 @@
+jwt:
+  keys:
+    private:
+      path: src/test/resources/certs/private.pem
+    public:
+      path: src/test/resources/certs/public.pem
