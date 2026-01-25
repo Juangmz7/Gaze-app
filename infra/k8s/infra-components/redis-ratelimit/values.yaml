@@ -12,7 +12,7 @@ redis:
   auth:
     enabled: true
     # We point to the secret we created earlier
-    existingSecret: redis-ratelimit-secret
+    existingSecret: redis-ratelimit-secrets
     existingSecretPasswordKey: redis-password
 
   # --- Master Configuration ---
