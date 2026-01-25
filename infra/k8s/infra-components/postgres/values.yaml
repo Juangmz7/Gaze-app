@@ -24,11 +24,11 @@ postgresql:
 
   primary:
     persistence:
-      size: 2Gi
+      size: 4Gi
     resources:
       requests:
-        cpu: 100m
-        memory: 256Mi
+        cpu: 400m
+        memory: 1Gi
 
     startupProbe:
       enabled: true
