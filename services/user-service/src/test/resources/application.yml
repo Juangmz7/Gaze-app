@@ -4,3 +4,8 @@ jwt:
       path: src/test/resources/certs/private.pem
     public:
       path: src/test/resources/certs/public.pem
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
