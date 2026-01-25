@@ -6,4 +6,4 @@ resources:
   - 01-service.yaml
   - 02-scaled-object.yaml
   - config.yaml
-  - ../../common/rabbitmq-auth.yaml
+  - rabbitmq-auth.yaml
