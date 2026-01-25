@@ -16,6 +16,9 @@ spec:
           - name: redis
             path: infra/k8s/infra-components/redis-ratelimit
 
+          - name: gateway
+            path: infra/k8s/common/gateway
+
   template:
     metadata:
       name: '{{name}}-infra'
