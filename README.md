@@ -12,8 +12,8 @@ graph TB
     
     Client --> Gateway["API Gateway<br/>Port 8090<br/>Rate Limiting & Auth"]
     
-    Gateway --> UserSvc["User Service<br/><br/>Authentication & Users"]
-    Gateway --> PostSvc["Post Service<br/><br/>Posts & Comments"]
+    Gateway --> UserSvc["User Service<br/>Port 8082<br/>Authentication & Users"]
+    Gateway --> PostSvc["Post Service<br/>Port 8082<br/>Posts & Comments"]
     Gateway --> SocialSvc["Social Service<br/>Port 8082<br/>Friend Requests"]
     Gateway --> FeedSvc["Feed Service<br/>Port 8083<br/>Content Aggregation"]
     
