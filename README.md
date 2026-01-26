@@ -13,7 +13,7 @@ graph TB
 
     Client["Client Applications"]
     
-    Client --> Gateway["API Gateway<br/>Port 8090<br/>Rate Limiting & Auth"]
+    Client --> Gateway["API Gateway<br/><br/>Rate Limiting & Auth"]
     
     Gateway --> UserSvc["User Service<br/><br/>Authentication & Users"]
     Gateway --> PostSvc["Post Service<br/><br/>Posts & Comments"]
