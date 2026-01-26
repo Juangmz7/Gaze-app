@@ -49,7 +49,7 @@ graph TB
 - **Autoscaling**: KEDA (Kubernetes Event-Driven Autoscaling)
 - **Message Broker**: RabbitMQ
 - **Cache/Rate Limiting**: Redis
-- **Databases**: PostgreSQL 16 (one per service) [4](#0-3) 
+- **Databases**: PostgreSQL 15 (one per service) [4](#0-3) 
 
 ### Security & Authentication
 - **Authentication**: JWT (JSON Web Tokens)
@@ -223,7 +223,7 @@ sequenceDiagram
 1. **Start Infrastructure Services**:
 ```bash
 cd infra
-docker-compose up -d
+docker compose up -d
 ```
 
 This starts:
@@ -303,17 +303,6 @@ KEDA monitors:
 - RabbitMQ queue depths
 - Custom application metrics [16](#0-15) 
 
-## 🚦 API Documentation
-
-Each service exposes OpenAPI/Swagger documentation:
-- **User Service**: `http://localhost:8080/swagger-ui.html`
-- **Post Service**: `http://localhost:8081/swagger-ui.html`
-- **Social Service**: `http://localhost:8082/swagger-ui.html`
-- **Feed Service**: `http://localhost:8083/swagger-ui.html`
-- **API Gateway**: `http://localhost:8090/swagger-ui.html`
-
-## 🤝 Contributing
-
 ### Branch Strategy
 - `main`: Production-ready code
 - `test`: Testing environment (ArgoCD target)
@@ -350,7 +339,6 @@ Each service exposes OpenAPI/Swagger documentation:
 ---
 
 **Repository**: [Juangmz7/Gaze-app](https://github.com/Juangmz7/Gaze-app)  
-**License**: (Add your license information)  
 **Maintainer**: Juan Gomez
 
 ### Citations
