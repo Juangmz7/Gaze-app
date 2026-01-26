@@ -33,6 +33,7 @@ graph TB
     RabbitMQ -.->|Events| NotifSvc
     
     Gateway --> Redis["Redis<br/>Rate Limiting"]
+```
 
 ## 🚀 Technology Stack
 
