@@ -12,8 +12,8 @@ graph TB
     
     Client --> Gateway["API Gateway<br/>Port 8090<br/>Rate Limiting & Auth"]
     
-    Gateway --> UserSvc["User Service<br/>Port 8082<br/>Authentication & Users"]
-    Gateway --> PostSvc["Post Service<br/>Port 8082<br/>Posts & Comments"]
+    Gateway --> UserSvc["User Service<br/>Port 8080<br/>Authentication & Users"]
+    Gateway --> PostSvc["Post Service<br/>Port 8081<br/>Posts & Comments"]
     Gateway --> SocialSvc["Social Service<br/>Port 8082<br/>Friend Requests"]
     Gateway --> FeedSvc["Feed Service<br/>Port 8083<br/>Content Aggregation"]
     
@@ -305,9 +305,20 @@ KEDA monitors:
 - RabbitMQ queue depths
 - Custom application metrics [16](#0-15) 
 
+## 🚦 API Documentation
+
+Each service exposes OpenAPI/Swagger documentation:
+- **User Service**: `http://localhost:8080/swagger-ui.html`
+- **Post Service**: `http://localhost:8081/swagger-ui.html`
+- **Social Service**: `http://localhost:8082/swagger-ui.html`
+- **Feed Service**: `http://localhost:8083/swagger-ui.html`
+- **API Gateway**: `http://localhost:8090/swagger-ui.html`
+
+## 🤝 Contributing
+
 ### Branch Strategy
 - `main`: Production-ready code
-- `dev`: Develop environment (ArgoCD target)
+- `test`: Testing environment (ArgoCD target)
 - Feature branches: `feature/your-feature-name`
 
 ### Code Standards
@@ -341,6 +352,7 @@ KEDA monitors:
 ---
 
 **Repository**: [Juangmz7/Gaze-app](https://github.com/Juangmz7/Gaze-app)  
+**License**: (Add your license information)  
 **Maintainer**: Juan Gomez
 
 ### Citations
