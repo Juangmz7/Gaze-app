@@ -8,6 +8,9 @@ Gaze-App is a cloud-native social media platform built using microservices archi
 
 ```mermaid
 graph TB
+    %% Global style: Dark background, White text, White border
+    classDef default fill:#2d3436,stroke:#ffffff,stroke-width:2px,color:#ffffff
+
     Client["Client Applications"]
     
     Client --> Gateway["API Gateway<br/>Port 8090<br/>Rate Limiting & Auth"]
@@ -30,11 +33,6 @@ graph TB
     RabbitMQ -.->|Events| NotifSvc
     
     Gateway --> Redis["Redis<br/>Rate Limiting"]
-    
-    style Gateway fill:#e1f5ff
-    style RabbitMQ fill:#ffe1e1
-    style Redis fill:#fff4e1
- ``` 
 
 ## 🚀 Technology Stack
 
