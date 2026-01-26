@@ -122,6 +122,9 @@ Event-driven notification system:
 
 ```mermaid
 graph TB
+    %% Global style: Dark background, White text, White border
+    classDef default fill:#2d3436,stroke:#ffffff,stroke-width:2px,color:#ffffff
+
     subgraph "Kubernetes Cluster"
         subgraph "ArgoCD Namespace"
             ArgoCD["ArgoCD<br/>GitOps Controller"]
@@ -160,10 +163,6 @@ graph TB
     KEDA1 -.->|Monitors| PS
     KEDA1 -.->|Monitors| SS
     KEDA1 -.->|Monitors| FS
-    
-    style ArgoCD fill:#ff9999
-    style KEDA1 fill:#99ccff
-    style PG fill:#99ff99
 ```
 
 ### ArgoCD Configuration
