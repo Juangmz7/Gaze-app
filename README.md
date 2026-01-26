@@ -33,7 +33,7 @@ graph TB
     
     style Gateway fill:#e1f5ff
     style RabbitMQ fill:#ffe1e1
-    style Redis fill:#fff4e1 
+    style Redis fill:#fff4e1 ``` 
 
 ## 🚀 Technology Stack
 
