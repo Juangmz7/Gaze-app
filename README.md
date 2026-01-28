@@ -290,12 +290,6 @@ Each microservice follows the database-per-service pattern with dedicated Postgr
 
 ## 📊 Monitoring & Observability
 
-### Health Checks
-All services expose Spring Boot Actuator endpoints:
-- `/actuator/health`
-- `/actuator/info`
-- `/actuator/metrics`
-
 ### Autoscaling Metrics
 KEDA monitors:
 - CPU utilization
@@ -322,6 +316,7 @@ KEDA monitors:
 - **CQRS**: Separate read/write models in Feed Service
 - **Circuit Breaker**: Implemented in API Gateway
 - **Rate Limiting**: Redis-based at gateway level
+- SAGA pattern for distributed transactions
 
 ### Deployment Strategy
 - **GitOps**: ArgoCD continuously syncs from Git repository
