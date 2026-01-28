@@ -251,8 +251,7 @@ mvn spring-boot:run
 
 1. **Apply ArgoCD Applications**:
 ```bash
-kubectl apply -f infra/k8s/argocd/apps/argocd-apps.yaml
-kubectl apply -f infra/k8s/argocd/apps/argocd-infra-apps.yaml
+kubectl apply -f infra/k8s/argocd/root-app.yaml
 ```
 
 2. **Verify Deployments**:
