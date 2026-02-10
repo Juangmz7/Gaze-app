@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-Gaze-App is a cloud-native social media platform built using microservices architecture, designed for scalability and resilience. The platform implements event-driven patterns with asynchronous communication and follows modern DevOps practices with GitOps deployment using ArgoCD. [1](#0-0) 
+Gaze-App is a cloud-native social media platform built using microservices architecture, designed for scalability and resilience. The platform implements event-driven patterns with asynchronous communication and follows modern DevOps practices with GitOps deployment using ArgoCD. 
 
 ## 🏗️ Architecture Overview
 
