@@ -1,14 +1,14 @@
 name: CI Notification Service
 on:
   push:
-    branches: [ "main", "test" ]
+    branches: [ "main", "dev" ]
     paths:
       - 'services/notification-service/**' # Trigger on service changes
       - 'common-events/**'         # Trigger on shared events changes
       - 'common-security/**'       # Trigger on shared security changes
 
   pull_request:
-    branches: [ "main", "test" ]
+    branches: [ "main", "dev" ]
     paths:
       - 'services/notification-service/**'
       - 'common-events/**'

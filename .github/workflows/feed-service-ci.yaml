@@ -1,14 +1,14 @@
 name: CI Feed Service
 on:
   push:
-    branches: [ "main", "test" ]
+    branches: [ "main", "dev" ]
     paths:
       - 'services/feed-service/**' # Trigger on service changes
       - 'common-events/**'         # Trigger on shared events changes
       - 'common-security/**'       # Trigger on shared security changes
 
   pull_request:
-    branches: [ "main", "test" ]
+    branches: [ "main", "dev" ]
     paths:
       - 'services/feed-service/**'
       - 'common-events/**'
