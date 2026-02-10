@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/Juangmz7/Gaze-app.git'
-    targetRevision: test
+    targetRevision: main
     path: infra/k8s/argocd/apps
   destination:
     server: https://kubernetes.default.svc

@@ -33,7 +33,7 @@ spec:
       project: default
       source:
         repoURL: 'https://github.com/Juangmz7/Gaze-app.git'
-        targetRevision: test
+        targetRevision: main
         path: '{{path}}'
 
       destination:
