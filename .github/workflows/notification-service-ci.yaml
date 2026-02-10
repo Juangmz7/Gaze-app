@@ -7,6 +7,13 @@ on:
       - 'common-events/**'         # Trigger on shared events changes
       - 'common-security/**'       # Trigger on shared security changes
 
+  pull_request:
+    branches: [ "main", "test" ]
+    paths:
+      - 'services/notification-service/**'
+      - 'common-events/**'
+      - 'common-security/**'
+
 jobs:
   call-template:
     uses: ./.github/workflows/service-ci.yaml

@@ -1,11 +1,18 @@
 name: CI Post Service
 on:
   push:
-    branches: [ "test", "test" ]
+    branches: [ "main", "test" ]
     paths:
       - 'services/post-service/**' # Trigger on service changes
       - 'common-events/**'         # Trigger on shared events changes
       - 'common-security/**'       # Trigger on shared security changes
+
+  pull_request:
+    branches: [ "main", "test" ]
+    paths:
+      - 'services/post-service/**'
+      - 'common-events/**'
+      - 'common-security/**'
 
 jobs:
   call-template:
